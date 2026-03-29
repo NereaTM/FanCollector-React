@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { FormEvent } from "react";
+import type { ChangeEvent } from "react";
 import { Link } from "react-router-dom";
 
 import headerImg from "../assets/headerColecciones.png";
@@ -7,6 +7,11 @@ import exploraImg  from "../assets/explora.png";
 import creaImg from "../assets/creaygestiona.jpg";
 import comparteImg from "../assets/comparte.png";
 import crearCta from "../assets/CrearCuenta.png";
+
+import emailjs from "@emailjs/browser";
+const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
 const FAQ_ITEMS = [
   {
@@ -59,26 +64,73 @@ function Accordion() {
 }
 
 function ContactForm() {
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  // Estado para controllar los imputs
+  const [fields, setFields] = useState({ name: "", email: "", message: "" });
+  // Si el mensaje se ha enviado correctamente
+  const [enviado, setEnviado] = useState(false);
+  //Si el formulario está en proceso de envío (loading)
+  const [sending, setSending] = useState(false);
+  // Estado para mostrar msj de error
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  // Actualiza dinámicamente los campos del formulario según el input modificado
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+  setFields((f) => ({ ...f, [e.target.name]: e.target.value }));
+
+  async function handleSubmit(e: React.SyntheticEvent<HTMLFormElement>) {
+  // Evita que el formulario recargue la página y permite manejar el envío
+  e.preventDefault();
+  setSending(true);
+  setErrorMsg(null);
+  try {
+    await emailjs.send(
+      EMAILJS_SERVICE_ID,
+      EMAILJS_TEMPLATE_ID,
+      {
+        name: fields.name,
+        from_email: fields.email,
+        message: fields.message,
+      },
+      EMAILJS_PUBLIC_KEY
+    );
+    setEnviado(true);
+    setFields({ name: "", email: "", message: "" });
+    setTimeout(() => setEnviado(false), 5000);
+  } catch {
+    setErrorMsg("No se pudo enviar el mensaje. Inténtalo de nuevo.");
+  } finally {
+    setSending(false);
   }
-    return (
+}
+
+  return (
     <div className="contact-form">
+      {enviado && (
+        <div className="aviso-ok">
+          ¡Gracias por tu mensaje! Responderemos lo antes posible.
+        </div>
+      )}
+      {errorMsg && (
+        <div className="aviso-error">{errorMsg}</div>
+      )}
       <form onSubmit={handleSubmit} id="contact-form">
         <div className="form-group">
           <label htmlFor="name">Nombre</label>
-          <input type="text" id="name" name="name" required className="form-input" />
+          <input type="text" id="name" name="name" required className="form-input"
+            value={fields.name} onChange={handleChange} />
         </div>
         <div className="form-group">
           <label htmlFor="email">Email</label>
-          <input type="email" id="email" name="email" required className="form-input" />
+          <input type="email" id="email" name="email" required className="form-input"
+            value={fields.email} onChange={handleChange} />
         </div>
         <div className="form-group">
           <label htmlFor="message">Mensaje</label>
-          <textarea id="message" name="message" rows={5} required className="form-textarea" />
+          <textarea id="message" name="message" rows={5} required className="form-textarea"
+            value={fields.message} onChange={handleChange} />
         </div>
-        <button type="submit" className="btn btn-primary">
-          Enviar Mensaje
+        <button type="submit" className="btn btn-primary" disabled={sending}>
+          {sending ? "Enviando..." : "Enviar Mensaje"}
         </button>
       </form>
     </div>
