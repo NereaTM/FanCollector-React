@@ -5,6 +5,9 @@ import App from './App.tsx'
 import "./styles/tokens.css"
 import "./styles/base.css"
 import "./styles/layout.css"
+import "./styles/home.css"
+import "./styles/forms.css"
+import "./styles/componentes.css"
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <BrowserRouter>
