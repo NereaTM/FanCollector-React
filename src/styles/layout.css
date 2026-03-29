@@ -339,6 +339,9 @@
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+.newsletter-msg--ok    { color: var(--color-success); }
+.newsletter-msg--error { color: var(--color-error); }
+
 @media (min-width: 992px) {
   .sidebar {
     position: fixed;
