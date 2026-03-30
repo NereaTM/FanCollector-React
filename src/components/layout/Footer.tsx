@@ -1,13 +1,15 @@
-import { Link } from "react-router-dom";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import logo from "../../assets/logo.png";
+import { useAuth } from "../../auth/AuthContext";
 
 import emailjs from "@emailjs/browser";
-const SERVICE_ID    = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
 const TEMPLATE_USER = import.meta.env.VITE_EMAILJS_NEWSLETTER_TEMPLATE_USER;
-const PUBLIC_KEY    = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
 export default function Footer() {
+  const { user } = useAuth();
   // Email introducido en el input del newsletter
   const [email, setEmail] = useState("");
   // Estado del proceso de suscripción
@@ -51,7 +53,10 @@ export default function Footer() {
           <ul>
             <li><Link to="/">Inicio</Link></li>
             <li><Link to="/colecciones">Colecciones</Link></li>
-            <li><Link to="/login">Iniciar Sesión</Link></li>
+            {!user
+              ? <li><Link to="/login">Iniciar Sesión</Link></li>
+              : <li><Link to="/perfil">Mi Perfil</Link></li>
+            }
           </ul>
         </div>
 
