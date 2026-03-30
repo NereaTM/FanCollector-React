@@ -26,8 +26,94 @@
   border-color: var(--color-primary);
 }
 
-/* Contacto home */
+.form-error {
+  color: var(--color-error);
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  min-height: 1.25rem;
+}
 
+/* Contraseña con ojo*/
+.password-input {
+  position: relative;
+}
+
+.toggle-password {
+  position: absolute;
+  top: 50%;
+  right: 0.75rem;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--color-text-light);
+  cursor: pointer;
+}
+
+.form-error {
+  color: var(--color-error);
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  min-height: 1.25rem;
+}
+
+/* Auth  */
+.auth-section {
+  padding: 4rem 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 200px);
+}
+
+.auth-container {
+  width: 100%;
+  max-width: 500px;
+  background-color: var(--color-white);
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+
+.auth-tabs {
+  display: flex;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.auth-tab {
+  flex: 1;
+  padding: 1rem;
+  text-align: center;
+  background-color: transparent;
+  border: none;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text);
+  cursor: pointer;
+  transition: all var(--transition-speed);
+}
+
+.auth-tab:hover {
+  color: var(--color-accent);
+}
+
+.auth-tab.active {
+  color: var(--color-primary);
+  border-bottom: 2px solid var(--color-primary);
+}
+
+.auth-content {
+  padding: 2rem;
+}
+
+.auth-form {
+  display: none;
+}
+
+.auth-form.active {
+  display: block;
+}
+
+/* Contacto home */
 .contact-form {
   max-width: 600px;
   margin: 0 auto;
