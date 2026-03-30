@@ -16,15 +16,15 @@ function SessionExpiryWatcher() {
   useEffect(() => {
     if (!token) return;
     try {
-      const payload = JSON.parse(atob(token.split(".")[1])) as { expiracion: number };
-      const expMs = payload.expiracion * 1000; // exp viene en segundos, lo pasamos a ms
+      const payload = JSON.parse(atob(token.split(".")[1])) as { exp: number };
+      const expMs = payload.exp * 1000; // exp viene en segundos, lo pasamos a ms
       const avisarMs = expMs - Date.now() - 2 * 60 * 1000; // 2 min antes
  
       if (avisarMs <= 0) return;
  
       const avisoTimeout = setTimeout(() => {
        toast("Tu sesión expirará en 2 minutos.", {
-          icon: <i className="fas fa-exclamation-triangle"></i>
+          icon: <i className="fas fa-exclamation-triangle" />,
         });
       }, avisarMs);
  
