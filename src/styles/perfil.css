@@ -1,0 +1,200 @@
+.perfil-page {
+  max-width: 860px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.perfil-banner {
+  background: linear-gradient(135deg, var(--color-primary) 0%, #1a4a7a 100%);
+  border-radius: var(--border-radius-lg);
+  padding: 2.5rem 2rem;
+  color: white;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 8px 32px rgba(10, 35, 66, 0.2);
+}
+
+.perfil-banner-inner {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.perfil-avatar-wrap {
+  flex-shrink: 0;
+}
+
+.perfil-avatar-xl {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.perfil-nombre {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+  color: white;
+}
+
+.perfil-banner .perfil-meta {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.perfil-banner .perfil-fecha {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.88rem;
+}
+
+.perfil-banner .perfil-rol {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: white;
+}
+
+.perfil-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.perfil-card {
+  background: white;
+  border-radius: var(--border-radius-md);
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(10, 35, 66, 0.08);
+}
+
+.perfil-card-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin: 0 0 1.25rem 0;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--color-background);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.perfil-info-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.perfil-info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.perfil-info-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-light);
+}
+
+.perfil-info-value {
+  font-size: 0.95rem;
+  color: var(--color-text);
+}
+
+.perfil-acciones {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.perfil-muted {
+  color: var(--color-text-light);
+  font-style: italic;
+}
+
+/* Avatar editor  */
+
+.perfil-avatar {
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--color-border, #ddd);
+  background: var(--color-background);
+}
+
+.perfil-avatar-lg {
+  width: 84px;
+  height: 84px;
+  flex: 0 0 auto;
+}
+
+.perfil-avatar-preview {
+  width: 96px;
+  height: 96px;
+  margin-bottom: 0.75rem;
+}
+
+.avatar-upload-section {
+  padding: 1rem;
+  border-radius: var(--border-radius-md, 16px);
+  background: var(--color-background);
+}
+
+/* Mensajes de PerfilEditar */
+
+.perfil-message {
+  padding: 0.75rem 1rem;
+  border-radius: var(--border-radius-sm, 10px);
+  margin-top: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.perfil-message.success {
+  background: rgba(76, 175, 138, 0.1);
+  color: var(--color-success);
+  border: 1px solid var(--color-success);
+}
+
+.perfil-message.error {
+  background: rgba(229, 57, 53, 0.1);
+  color: var(--color-error);
+  border: 1px solid var(--color-error);
+}
+
+.perfil-message.info {
+  background: rgba(33, 150, 243, 0.1);
+  color: var(--color-accent);
+  border: 1px solid var(--color-accent);
+}
+
+/* Zona de peligro */
+
+.perfil-card--danger {
+  border: 1px solid rgba(229, 57, 53, 0.25);
+}
+
+.perfil-card-title--danger {
+  color: var(--color-error);
+  border-bottom-color: rgba(229, 57, 53, 0.15);
+}
+
+.perfil-danger-desc {
+  font-size: 0.9rem;
+  color: var(--color-text-light);
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 600px) {
+  .perfil-banner-inner {
+    flex-direction: column;
+    text-align: center;
+  }
+  .perfil-banner .perfil-meta {
+    justify-content: center;
+  }
+}
