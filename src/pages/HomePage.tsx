@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { ChangeEvent } from "react";
 import { Link } from "react-router-dom";
-
+import { useAuth } from "../auth/AuthContext";
 import headerImg from "../assets/headerColecciones.png";
 import exploraImg  from "../assets/explora.png";
 import creaImg from "../assets/creaygestiona.jpg";
@@ -137,6 +137,7 @@ function ContactForm() {
   );
 }
 export default function HomePage() {
+  const { user } = useAuth();
   return (
     <>
       <section className="hero" style={{ backgroundImage: `linear-gradient(rgba(10, 35, 66, 0.7), rgba(10, 35, 66, 0.7)), url(${headerImg})` }}>
@@ -159,7 +160,10 @@ export default function HomePage() {
         <div className="cta-content">
           <h2>¿Listo para comenzar?</h2>
           <p>Regístrate ahora y comienza a registrar tu progreso</p>
-          <Link to="/login" className="btn btn-primary btn-lg">Crear Cuenta</Link>
+          {user
+            ? <Link to="/mis-colecciones" className="btn btn-primary btn-lg">Mis Colecciones</Link>
+            : <Link to="/login"className="btn btn-primary btn-lg">Crear Cuenta</Link>
+          }
         </div>
       </section>
 
