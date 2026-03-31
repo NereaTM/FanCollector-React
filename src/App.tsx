@@ -3,12 +3,16 @@ import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { AuthProvider } from "./auth/AuthContext";
 import { useAuth } from "./auth/AuthContext";
+import RequireAuth from "./auth/RequireAuth";
 
 
 import Layout from "./components/layout/Layout";
 import HomePage from "./pages/HomePage";
 import Login from "./pages/Login";
 import NotFoundPage from "./pages/NotFoundPage";
+import PerfilPropio from "./pages/Profile/Perfil";
+import PerfilEditar from "./pages/Profile/PerfilEditar";
+
 
 function SessionExpiryWatcher() {
   const { token, logout } = useAuth();
@@ -54,6 +58,9 @@ function AppRoutes() {
         <Route index element={<HomePage />} />
         <Route path="login" element={<Login />} />
 
+
+        <Route path="perfil" element={<RequireAuth><PerfilPropio /></RequireAuth>} />
+        <Route path="perfil/editar" element={<RequireAuth><PerfilEditar /></RequireAuth>} />
 
 
 
