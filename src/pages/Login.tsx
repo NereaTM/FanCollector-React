@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import Breadcrumbs from "../components/ui/Breadcrumbs";
 import PasswordInput from "../components/ui/PasswordInput";
 import { useAuth } from "../auth/AuthContext";
 import type { RegisterRequest } from "../types/auth";
@@ -127,29 +128,32 @@ export default function Login() {
   const from = (location.state as { from?: { pathname: string } } | null)?.from?.pathname ?? "/";
 
   return (
-    <section className="auth-section">
-      <div className="auth-container">
-        <div className="auth-tabs">
-          {["login", "register"].map((tab) => (
-            <button
-              key={tab}
-              className={`auth-tab${activeTab === tab ? " active" : ""}`}
-              onClick={() => setActiveTab(tab)}
-            >
-              {tab === "login" ? "Iniciar Sesión" : "Registrarse"}
-            </button>
-          ))}
-        </div>
-        <div className="auth-content">
-          <div className={`auth-form${activeTab === "login" ? " active" : ""}`}>
-            {/* replace:true evita que /login quede en el historial tras autenticar */}
-            <LoginForm onSuccess={(path) => navigate(path, { replace: true })} from={from} />
+    <>
+      <Breadcrumbs items={[{ label: "Inicio", to: "/" }, { label: "Iniciar Sesión" }]} />
+      <section className="auth-section">
+        <div className="auth-container">
+          <div className="auth-tabs">
+            {["login", "register"].map((tab) => (
+              <button
+                key={tab}
+                className={`auth-tab${activeTab === tab ? " active" : ""}`}
+                onClick={() => setActiveTab(tab)}
+              >
+                {tab === "login" ? "Iniciar Sesión" : "Registrarse"}
+              </button>
+            ))}
           </div>
-          <div className={`auth-form${activeTab === "register" ? " active" : ""}`}>
-            <RegisterForm onSuccess={(path) => navigate(path, { replace: true })} />
+          <div className="auth-content">
+            <div className={`auth-form${activeTab === "login" ? " active" : ""}`}>
+              {/* replace:true evita que /login quede en el historial tras autenticar */}
+              <LoginForm onSuccess={(path) => navigate(path, { replace: true })} from={from} />
+            </div>
+            <div className={`auth-form${activeTab === "register" ? " active" : ""}`}>
+              <RegisterForm onSuccess={(path) => navigate(path, { replace: true })} />
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 }

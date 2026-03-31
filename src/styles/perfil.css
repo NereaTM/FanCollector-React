@@ -118,6 +118,18 @@
   font-style: italic;
 }
 
+/* Rol badge */
+.perfil-rol {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.8rem;
+  border: 1px solid transparent;
+}
+
 /* Avatar editor  */
 
 .perfil-avatar {

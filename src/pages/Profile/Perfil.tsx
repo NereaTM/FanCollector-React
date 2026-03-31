@@ -6,6 +6,7 @@ import { resolveImgUrl } from "../../utils/imagenes";
 import PerfilVista from "../../components/domain/PerfilVista";
 import defaultAvatar from "../../assets/iconoUser.png";
 import type { AuthUser } from "../../types/auth";
+import EstadoPagina from "../../components/ui/EstadoPagina";
 
 export default function PerfilPropio() {
   const navigate = useNavigate();
@@ -22,14 +23,13 @@ export default function PerfilPropio() {
       .catch((err: Error) => setError(err?.message || "Error al cargar el perfil"))
       .finally(() => setLoading(false));
   }, [user?.id]);
-  if (loading) return <p style={{ textAlign: "center", marginTop: "2rem" }}>Cargando perfil...</p>;
+  if (loading) return <EstadoPagina loading="Cargando perfil..." />;
   if (error || !usuario) return (
-    <div style={{ textAlign: "center", marginTop: "2rem" }}>
-      <p>{error ?? "No se pudo cargar el perfil."}</p>
-      <button className="btn btn-outline" onClick={() => window.location.reload()}>
-        Reintentar
-      </button>
-    </div>
+    <EstadoPagina
+      titulo="Error al cargar el perfil"
+      error={error ?? "No se pudo cargar el perfil."}
+      accion={{ label: "Reintentar", onClick: () => window.location.reload() }}
+    />
   );
 
   return (
