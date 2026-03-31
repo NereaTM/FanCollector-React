@@ -8,6 +8,7 @@ import "./styles/layout.css"
 import "./styles/home.css"
 import "./styles/forms.css"
 import "./styles/componentes.css"
+import "./styles/perfil.css"
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <BrowserRouter>
