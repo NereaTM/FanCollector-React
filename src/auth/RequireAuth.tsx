@@ -7,8 +7,9 @@ export default function RequireAuth({ children }: { children: ReactNode }) {
   const location = useLocation();
 
   // Mientras comprobamos la sesión, esperamos
-  if (loadingSession) return <p style={{ textAlign: "center", marginTop: "2rem" }}>Cargando sesión...</p>;
-
+  if (loadingSession) {
+    return <div className="loading"><p>Cargando sesión...</p></div>
+  }
   // Si no hay sesión, redirigimos al login
   if (!token) return <Navigate to="/login" replace state={{ from: location }} />;
 
