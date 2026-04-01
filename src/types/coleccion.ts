@@ -3,7 +3,7 @@ export type Coleccion = {
   idCreador: number;
   nombreCreador: string;
   nombre: string;
-  descripcion: string;
+  descripcion: string | null;
   categoria: string;
   imagenPortada: string | null;
   fechaCreacion: string;

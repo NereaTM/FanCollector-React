@@ -9,6 +9,7 @@ import "./styles/home.css"
 import "./styles/forms.css"
 import "./styles/componentes.css"
 import "./styles/perfil.css"
+import "./styles/colecciones.css"
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <BrowserRouter>
