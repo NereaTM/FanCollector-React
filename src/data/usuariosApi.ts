@@ -1,9 +1,8 @@
 import { fetchAPI } from "./apiClient";
-import type { AuthUser } from "../types/auth";
 
 // GET 
 export function getUsuarioById(id: number | string) {
-  return fetchAPI<AuthUser>(`/usuarios/${id}`);
+  return fetchAPI(`/usuarios/${id}`);
 }
 
 // PUT

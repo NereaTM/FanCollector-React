@@ -9,11 +9,10 @@ import RequireAuth from "./auth/RequireAuth";
 import Layout from "./components/layout/Layout";
 import HomePage from "./pages/HomePage";
 import Login from "./pages/Login";
-import NotFoundPage from "./pages/NotFoundPage";
+import Colecciones from "./pages/Coleccion/DirectorioColecciones";
 import PerfilPropio from "./pages/Profile/Perfil";
 import PerfilEditar from "./pages/Profile/PerfilEditar";
-
-
+import NotFoundPage from "./pages/NotFoundPage";
 function SessionExpiryWatcher() {
   const { token, logout } = useAuth();
  
@@ -57,8 +56,10 @@ function AppRoutes() {
         {/* ── Rutas públicas ── */}
         <Route index element={<HomePage />} />
         <Route path="login" element={<Login />} />
+        <Route path="colecciones" element={<Colecciones />} />
 
 
+      {/* ── Rutas protegidas ── */}
         <Route path="perfil" element={<RequireAuth><PerfilPropio /></RequireAuth>} />
         <Route path="perfil/editar" element={<RequireAuth><PerfilEditar /></RequireAuth>} />
 
