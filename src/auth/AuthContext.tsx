@@ -15,8 +15,12 @@ type AuthContextType = {
 };
 
 export const AuthContext = createContext<AuthContextType>({
-  user: null, token: null, loadingSession: true,
-  login: async () => {}, register: async () => {}, logout: () => {},
+  user: null, 
+  token: null, 
+  loadingSession: true,
+  login: async () => {}, 
+  register: async () => {}, 
+  logout: () => {},
 });
 
 export function useAuth() {
@@ -52,7 +56,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     saveUserId(data.id);
     setToken(data.token);
     // Usamos los datos del login para no hacer otra petición
-    setUser({ id: data.id, email: data.email, nombre: data.nombre, rol: data.rol, urlAvatar: null });
+    const me = await fetchAPI<AuthUser>(`/usuarios/${data.id}`);
+    setUser(me);
   }, []);
 
   const register = useCallback(async (dto: RegisterRequest) => {

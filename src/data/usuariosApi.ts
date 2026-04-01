@@ -6,10 +6,6 @@ export function getUsuarioById(id: number | string) {
   return fetchAPI<AuthUser>(`/usuarios/${id}`);
 }
 
-export function getUsuarioByIdAdmin(id: number | string) {
-  return fetchAPI<AuthUser>(`/usuarios/${id}/admin`);
-}
-
 // PUT
 export function editarUsuario(id: number | string, dto: FormData | Record<string, unknown>) {
   return fetchAPI(`/usuarios/${id}`, { method: "PUT", body: dto as Record<string, unknown> });

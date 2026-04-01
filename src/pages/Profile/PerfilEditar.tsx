@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
-import { getUsuarioById, getUsuarioByIdAdmin, editarUsuario, cambiarRol, eliminarUsuario } from "../../data/usuariosApi";
+import { getUsuarioById, editarUsuario, eliminarUsuario } from "../../data/usuariosApi";
 import { getApiErrorMessage } from "../../data/apiClient";
 import { useAuth } from "../../auth/AuthContext";
 import { resolveImgUrl } from "../../utils/imagenes";
@@ -21,7 +21,8 @@ export default function PerfilEditar() {
   const targetId = id ? Number(id) : myId;
   const esAjeno = !!id;
   const esAdmin = user?.rol === "ADMIN";
-  const volverUrl = esAjeno ? `/perfil/${targetId}` : "/perfil";
+  
+  const volverUrl = "/perfil";
  
   const [usuario, setUsuario] = useState<AuthUser | null>(null);
   const [fields, setFields] = useState({ nombre: "", email: "", descripcion: "", contactoPublico: "", rol: "" });
@@ -35,14 +36,13 @@ export default function PerfilEditar() {
  
   useEffect(() => {
     if (!targetId) return;
-    const fetchFn = esAjeno ? getUsuarioByIdAdmin : getUsuarioById;
-    fetchFn(targetId)
+     getUsuarioById(targetId)
       .then((u: unknown) => {
         const perfil = u as AuthUser;
         setUsuario(perfil);
         setFields({
           nombre: perfil?.nombre ?? "",
-          email: perfil?.email ?? user?.email ?? "",
+          email: perfil?.email ?? "",
           descripcion: perfil?.descripcion ?? "",
           contactoPublico: perfil?.contactoPublico ?? "",
           rol: perfil?.rol ?? "",
@@ -51,13 +51,7 @@ export default function PerfilEditar() {
       })
       .catch((err: Error) => setError(err?.message || "Error al cargar el perfil"))
       .finally(() => setLoading(false));
-  }, [targetId, esAjeno]);
- 
-  useEffect(() => {
-    if (!esAjeno && user?.email) {
-      setFields((prev) => ({ ...prev, email: prev.email || user.email }));
-    }
-  }, [user?.email, esAjeno]);
+  }, [targetId]);
  
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
     setFields((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -84,7 +78,6 @@ export default function PerfilEditar() {
     setSaving(true);
     try {
       await editarUsuario(targetId, formData);
-      if (esAdmin && esAjeno && fields.rol) await cambiarRol(targetId, fields.rol);
       toast.success("Perfil actualizado correctamente");
       setTimeout(() => navigate(volverUrl), 900);
     } catch (err) {
@@ -98,8 +91,12 @@ export default function PerfilEditar() {
     try {
       await eliminarUsuario(myId);
       toast.success("Cuenta eliminada correctamente");
+      if (!esAjeno) {
       logout();
       navigate("/login");
+    } else {
+      navigate("/");
+    }
     } catch (err) {
       toast.error(getApiErrorMessage(err)); 
       setModalEliminar(false);
@@ -203,24 +200,21 @@ export default function PerfilEditar() {
               </div>
             </form>
           </div>
-
-          {(!esAjeno || esAdmin) && (
-            <div className="perfil-card perfil-card--danger">
-              <h2 className="perfil-card-title perfil-card-title--danger">
-                <i className="fas fa-exclamation-triangle" /> Zona de peligro
-              </h2>
-              <p className="perfil-danger-desc">
-                {esAjeno
-                  ? `Una vez elimines la cuenta de "${fields.nombre}", todos sus datos se borrarán permanentemente.`
-                  : "Una vez elimines tu cuenta, todos tus datos se borrarán de forma permanente y no podrás recuperarlos."
-                }
-              </p>
-              <button className="btn btn-danger" onClick={() => setModalEliminar(true)}>
-                <i className="fas fa-user-times" />
-                {esAjeno ? " Eliminar este usuario" : " Eliminar mi cuenta"}
-              </button>
-            </div>
-          )}
+          <div className="perfil-card perfil-card--danger">
+            <h2 className="perfil-card-title perfil-card-title--danger">
+              <i className="fas fa-exclamation-triangle" /> Zona de peligro
+            </h2>
+            <p className="perfil-danger-desc">
+              {esAjeno
+                ? `Una vez elimines la cuenta de "${fields.nombre}", todos sus datos se borrarán permanentemente.`
+                : "Una vez elimines tu cuenta, todos tus datos se borrarán de forma permanente y no podrás recuperarlos."
+              }
+            </p>
+            <button className="btn btn-danger" onClick={() => setModalEliminar(true)}>
+              <i className="fas fa-user-times" />
+              {esAjeno ? " Eliminar este usuario" : " Eliminar mi cuenta"}
+            </button>
+          </div>
         </div>
       </div>
     </>
