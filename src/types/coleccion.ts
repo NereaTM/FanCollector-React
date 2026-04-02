@@ -44,3 +44,8 @@ export type ColeccionPutDTO = {
   esPublica?: boolean;
   usableComoPlantilla?: boolean;
 };
+
+export type ColeccionConRelacion = {
+  uc: UsuarioColeccion;
+  coleccion: Coleccion;
+};
