@@ -6,7 +6,7 @@ type Accion = {
 };
 
 type Props = {
-  loading?: boolean | string;
+  loading?: string;
   error?: string;
   icono?: string;
   titulo?: string;
@@ -22,7 +22,7 @@ export default function EstadoPagina({
   if (loading) return (
     <div className="loading" style={{ padding: "4rem" }}>
       <i className="fas fa-spinner fa-spin" />
-      <p>{typeof loading === "string" ? loading : "Cargando..."}</p>
+      <p>{loading}</p>
     </div>
   );
 
