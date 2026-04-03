@@ -7,11 +7,7 @@ import exploraImg  from "../assets/explora.png";
 import creaImg from "../assets/creaygestiona.jpg";
 import comparteImg from "../assets/comparte.png";
 import crearCta from "../assets/CrearCuenta.png";
-
-import emailjs from "@emailjs/browser";
-const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
-const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
-const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+import { enviarContacto } from "../data/emailService";
 
 const FAQ_ITEMS = [
   {
@@ -78,30 +74,24 @@ function ContactForm() {
   setFields((f) => ({ ...f, [e.target.name]: e.target.value }));
 
   async function handleSubmit(e: React.SyntheticEvent<HTMLFormElement>) {
-  // Evita que el formulario recargue la página y permite manejar el envío
-  e.preventDefault();
-  setSending(true);
-  setErrorMsg(null);
-  try {
-    await emailjs.send(
-      EMAILJS_SERVICE_ID,
-      EMAILJS_TEMPLATE_ID,
-      {
+    e.preventDefault();
+    setSending(true);
+    setErrorMsg(null);
+    try {
+      await enviarContacto({
         name: fields.name,
         from_email: fields.email,
         message: fields.message,
-      },
-      EMAILJS_PUBLIC_KEY
-    );
-    setEnviado(true);
-    setFields({ name: "", email: "", message: "" });
-    setTimeout(() => setEnviado(false), 5000);
-  } catch {
-    setErrorMsg("No se pudo enviar el mensaje. Inténtalo de nuevo.");
-  } finally {
-    setSending(false);
+      });
+      setEnviado(true);
+      setFields({ name: "", email: "", message: "" });
+      setTimeout(() => setEnviado(false), 5000);
+    } catch {
+      setErrorMsg("No se pudo enviar el mensaje. Inténtalo de nuevo.");
+    } finally {
+      setSending(false);
+    }
   }
-}
 
   return (
     <div className="contact-form">
