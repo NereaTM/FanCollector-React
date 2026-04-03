@@ -49,3 +49,8 @@ export type ColeccionConRelacion = {
   uc: UsuarioColeccion;
   coleccion: Coleccion;
 };
+
+export type Relacion = {
+  id: number;
+  esFavorita: boolean;
+} | null;

@@ -43,8 +43,3 @@ export type LoginDTO = {
   email: string;
   contrasena: string;
 };
-
-export type Relacion = {
-  id: number;
-  esFavorita: boolean;
-} | null;

@@ -49,13 +49,6 @@
   cursor: pointer;
 }
 
-.form-error {
-  color: var(--color-error);
-  font-size: 0.875rem;
-  margin-top: 0.5rem;
-  min-height: 1.25rem;
-}
-
 /* Auth  */
 .auth-section {
   padding: 4rem 1rem;

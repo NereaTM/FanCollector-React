@@ -12,7 +12,10 @@ import NotFoundPage from "./pages/NotFoundPage";
 import Login from "./pages/Login";
 
 import Colecciones from "./pages/Coleccion/DirectorioColecciones";
+import ColeccionDetalle from "./pages/Coleccion/ColeccionDetalle";
+
 import MisColecciones from "./pages/Coleccion/MisColecciones";
+import MisColeccionesDetalle from "./pages/Coleccion/MisColeccionesDetalle";
 
 import PerfilPropio from "./pages/Profile/Perfil";
 import PerfilEditar from "./pages/Profile/PerfilEditar";
@@ -62,12 +65,14 @@ function AppRoutes() {
         <Route index element={<HomePage />} />
         <Route path="login" element={<Login />} />
         <Route path="colecciones" element={<Colecciones />} />
+        <Route path="colecciones/:id" element={<ColeccionDetalle />} />
 
 
       {/* ── Rutas protegidas ── */}
         <Route path="perfil" element={<RequireAuth><PerfilPropio /></RequireAuth>} />
         <Route path="perfil/editar" element={<RequireAuth><PerfilEditar /></RequireAuth>} />
         <Route path="mis-colecciones" element={<RequireAuth><MisColecciones /></RequireAuth>} />
+        <Route path="mis-colecciones/:id" element={<RequireAuth><MisColeccionesDetalle /></RequireAuth>} />
 
 
 
