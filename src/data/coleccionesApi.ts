@@ -55,19 +55,13 @@ export function getUsuarioColeccionPorUsuarioYColeccion(idUsuario: number | stri
   );
 }
 
-export function getUsuarioItemsPorColeccion(idUsuario: number | string, idColeccion: number | string) {
-  return fetchAPI(
-    `/usuario-items?idUsuario=${encodeURIComponent(idUsuario)}&idColeccion=${encodeURIComponent(idColeccion)}`
-  );
-}
-
 // POST
 export function crearUsuarioColeccion(dto: Record<string, unknown>) {
   return fetchAPI("/usuario-colecciones/v2", { method: "POST", body: dto });
 }
 
 // PATCH
-export function patchUsuarioColeccionFavorita(idUsuarioColeccion: number | string, esFavorita: boolean) {
+export function patchFavorita (idUsuarioColeccion: number | string, esFavorita: boolean) {
   return fetchAPI(`/usuario-colecciones/${idUsuarioColeccion}/favorita`, { method: "PATCH", body: { esFavorita } });
 }
 

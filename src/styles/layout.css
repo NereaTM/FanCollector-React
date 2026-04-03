@@ -39,8 +39,8 @@
   position: sticky;
   top: 0;
   z-index: 100;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, backdrop-filter 0.3s ease;
 }
-
 .navbar-left {
   display: flex;
   align-items: center;
@@ -115,10 +115,6 @@
   border-radius: 50%;
   object-fit: cover;
   margin-right: 0.5rem;
-}
-
-.navbar {
-  transition: background-color 0.3s ease, box-shadow 0.3s ease, backdrop-filter 0.3s ease;
 }
 
 .navbar--scrolled {
@@ -239,10 +235,6 @@
   color: var(--color-white);
   font-size: 1.25rem;
   cursor: pointer;
-}
-
-.sidebar-content {
-  padding: 1rem 0;
 }
 
 .sidebar-nav ul {
