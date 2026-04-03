@@ -2,11 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import logo from "../../assets/logo.png";
 import { useAuth } from "../../auth/AuthContext";
-
-import emailjs from "@emailjs/browser";
-const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
-const TEMPLATE_USER = import.meta.env.VITE_EMAILJS_NEWSLETTER_TEMPLATE_USER;
-const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+import { enviarNewsletter } from "../../data/emailService";
 
 export default function Footer() {
   const { user } = useAuth();
@@ -15,15 +11,11 @@ export default function Footer() {
   // Estado del proceso de suscripción
   const [estado, setEstado] = useState<"idle" | "sending" | "ok" | "error">("idle");
 
-  async function enviarNewsletter() {
+  async function handleNewsletter(e: React.SyntheticEvent<HTMLFormElement>) {
+    e.preventDefault();
     setEstado("sending");
     try {
-      // Llamada al servicio externo EmailJS
-      await emailjs.send(SERVICE_ID, TEMPLATE_USER, {
-        para_email: email,
-        nombre: email,
-        email: email,
-      }, PUBLIC_KEY);
+      await enviarNewsletter({ email });
       setEstado("ok");
       setEmail("");
       setTimeout(() => setEstado("idle"), 5000);
@@ -31,12 +23,6 @@ export default function Footer() {
       setEstado("error");
       setTimeout(() => setEstado("idle"), 4000);
     }
-  }
-
-  function handleNewsletter(e: React.SyntheticEvent<HTMLFormElement>) {
-    // Evita que el formulario recargue la página y permite manejar el envío
-    e.preventDefault();
-    void enviarNewsletter();
   }
 
   return (
