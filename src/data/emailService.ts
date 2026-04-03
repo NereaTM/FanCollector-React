@@ -4,8 +4,8 @@ const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID as string;
 const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY as string;
 
 const TEMPLATES = {
-  contacto:    import.meta.env.VITE_EMAILJS_TEMPLATE_ID as string,
-  newsletter:  import.meta.env.VITE_EMAILJS_NEWSLETTER_TEMPLATE_USER as string,
+  contacto: import.meta.env.VITE_EMAILJS_TEMPLATE_ID as string,
+  newsletter: import.meta.env.VITE_EMAILJS_NEWSLETTER_TEMPLATE_USER as string,
 };
 
 // Contacto
