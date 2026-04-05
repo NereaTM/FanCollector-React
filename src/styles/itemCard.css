@@ -103,9 +103,9 @@
 }
 
 .icard-btn-edit:hover {
- background: #e08c00;
+  background: #e08c00;
   transform: scale(1.1);
-  color: #fff;
+  color: var(--color-white);
 }
 
 .icard-btn-del {
@@ -175,7 +175,7 @@
   background: #fef9c3;
   border-left: 3px solid var(--color-warning);
   border-radius: 0 4px 4px 0;
-   color: var(--color-text);
+  color: var(--color-text);
   overflow: hidden;
   max-height: 2.8em;
   line-height: 1.4;

@@ -44,7 +44,7 @@ export default function ColeccionCard({
       <div className="card-body">
         <div className="card-badges">
           {esFavorita && (
-            <span className="card-badge-inline" style={{ background: "#f0a500" }}>
+            <span className="card-badge-inline card-badge-inline--favorita">
               <i className="fas fa-star" /> Favorita
             </span>
           )}

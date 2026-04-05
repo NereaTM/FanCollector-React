@@ -50,7 +50,7 @@ export default function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose:
  
       {user && (
         <div className="sidebar-footer">
-          <NavLink to="/colecciones/crear" className="btn btn-primary sidebar-crear-btn">
+          <NavLink to="/colecciones/crear" className="btn btn-success sidebar-crear-btn">
             <i className="fas fa-plus" /> Crear colección
           </NavLink>
         </div>
