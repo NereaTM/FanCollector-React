@@ -151,6 +151,138 @@
   font-weight: 600;
 }
 
+/* Dashboard mis colecciones  */
+
+.mc-page {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.mc-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid rgba(10, 35, 66, 0.08);
+  flex-wrap: wrap;
+}
+
+.mc-header-left h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin: 0 0 2px;
+}
+
+.mc-header-left p {
+  font-size: 0.8rem;
+  color: var(--color-text-light);
+  margin: 0;
+}
+
+/* Stats */
+
+.mc-stats {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.mc-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.4rem 1rem;
+  background: var(--color-background);
+  border-radius: var(--border-radius-sm);
+}
+
+.mc-stat-count {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  line-height: 1;
+}
+
+/* Controles */
+
+.mc-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem 2rem;
+  border-bottom: 1px solid rgba(10, 35, 66, 0.08);
+  flex-wrap: wrap;
+}
+
+.mc-search-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid rgba(10, 35, 66, 0.18);
+  border-radius: var(--border-radius-sm);
+  padding: 0 0.75rem;
+  flex: 1;
+  min-width: 180px;
+  max-width: 300px;
+  background: var(--color-white);
+}
+
+.mc-search-wrap input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 0.85rem;
+  padding: 0.45rem 0;
+  background: transparent;
+  color: var(--color-text);
+}
+
+.mc-search-wrap i {
+  color: var(--color-text-light);
+  font-size: 0.8rem;
+}
+
+.mc-filter-group {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.mc-filter {
+  padding: 0.38rem 0.85rem;
+  border: 1px solid rgba(10, 35, 66, 0.15);
+  border-radius: 20px;
+  font-size: 0.78rem;
+  cursor: pointer;
+  background: var(--color-white);
+  color: var(--color-text-light);
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.mc-filter:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.mc-filter--activo {
+  background: var(--color-primary);
+  color: var(--color-white);
+  border-color: var(--color-primary);
+}
+
+.mc-sort {
+  padding: 0.42rem 0.75rem;
+  border: 1px solid rgba(10, 35, 66, 0.15);
+  border-radius: var(--border-radius-sm);
+  font-size: 0.78rem;
+  background: var(--color-white);
+  color: var(--color-text);
+  cursor: pointer;
+  outline: none;
+}
+
 @media (max-width: 768px) {
   .coleccion-detalle-page {
     display: flex;
@@ -169,4 +301,8 @@
   .coleccion-detalle-card--admin {
     width: 100%;
   }
+
+  .mc-header    { flex-direction: column; align-items: flex-start; }
+  .mc-controls  { gap: 0.5rem; }
+  .mc-search-wrap { max-width: 100%; }
 }
