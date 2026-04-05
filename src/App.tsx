@@ -18,8 +18,8 @@ import MisColecciones from "./pages/Coleccion/MisColecciones";
 import MisColeccionesDetalle from "./pages/Coleccion/MisColeccionesDetalle";
 import ItemCrear from "./pages/Coleccion/ItemCrear";
 
-import PerfilPropio from "./pages/Profile/Perfil";
-import PerfilEditar from "./pages/Profile/PerfilEditar";
+import PerfilPropio from "./pages/Perfil/Perfil";
+import PerfilEditar from "./pages/Perfil/PerfilEditar";
 
 
 function SessionExpiryWatcher() {

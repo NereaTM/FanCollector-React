@@ -79,7 +79,7 @@ export default function PerfilEditar() {
     try {
       await editarUsuario(targetId, formData);
       toast.success("Perfil actualizado correctamente");
-      setTimeout(() => navigate(volverUrl), 900);
+      navigate(volverUrl);
     } catch (err) {
       toast.error(getApiErrorMessage(err));
       setSaving(false);

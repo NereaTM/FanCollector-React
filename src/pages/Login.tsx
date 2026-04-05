@@ -39,11 +39,15 @@ function LoginForm({ onSuccess, from }: { onSuccess: (path: string) => void; fro
     <form id="login" onSubmit={handleSubmit}>
       <div className="form-group">
         <label htmlFor="login-email">Email</label>
-        <input type="email" id="login-email" name="email" value={fields.email} onChange={handleChange} required />
+        <input type="email" id="login-email" name="email" 
+        className="form-input"  
+        value={fields.email} onChange={handleChange} required />
       </div>
       <div className="form-group">
         <label htmlFor="login-password">Contraseña</label>
-        <PasswordInput id="login-password" name="password" value={fields.password} onChange={handleChange} />
+        <PasswordInput id="login-password"  name="password" 
+        className="form-input"  
+        value={fields.password} onChange={handleChange} />
       </div>
       {error && <div className="form-error">{error}</div>}
       <button type="submit" className="btn btn-primary btn-block" disabled={loading}>
@@ -94,20 +98,20 @@ function RegisterForm({ onSuccess }: { onSuccess: (path: string) => void }) {
       {(["nombre", "apellido"] as const).map((name) => (
         <div className="form-group" key={name}>
           <label htmlFor={`register-${name}`}>{name.charAt(0).toUpperCase() + name.slice(1)}</label>
-          <input type="text" id={`register-${name}`} name={name} value={fields[name]} onChange={handleChange} required />
+          <input type="text" id={`register-${name}`} name={name} className="form-input" value={fields[name]} onChange={handleChange} required />
         </div>
       ))}
       <div className="form-group">
         <label htmlFor="register-email">Email</label>
-        <input type="email" id="register-email" name="email" value={fields.email} onChange={handleChange} required />
+        <input type="email" id="register-email" name="email" className="form-input" value={fields.email} onChange={handleChange} required />
       </div>
       <div className="form-group">
         <label htmlFor="register-password">Contraseña</label>
-        <PasswordInput id="register-password" name="password" value={fields.password} onChange={handleChange} />
+        <PasswordInput id="register-password" name="password" className="form-input" value={fields.password} onChange={handleChange} />
       </div>
       <div className="form-group">
         <label htmlFor="register-confirm-password">Confirmar Contraseña</label>
-        <PasswordInput id="register-confirm-password" name="confirmPassword" value={fields.confirmPassword} onChange={handleChange} />
+        <PasswordInput id="register-confirm-password" name="confirmPassword" className="form-input" value={fields.confirmPassword} onChange={handleChange} />
       </div>
       {error && <div className="form-error">{error}</div>}
       <button type="submit" className="btn btn-primary btn-block" disabled={loading}>
@@ -144,13 +148,10 @@ export default function Login() {
             ))}
           </div>
           <div className="auth-content">
-            <div className={`auth-form${activeTab === "login" ? " active" : ""}`}>
-              {/* replace:true evita que /login quede en el historial tras autenticar */}
-              <LoginForm onSuccess={(path) => navigate(path, { replace: true })} from={from} />
-            </div>
-            <div className={`auth-form${activeTab === "register" ? " active" : ""}`}>
-              <RegisterForm onSuccess={(path) => navigate(path, { replace: true })} />
-            </div>
+            {activeTab === "login"
+              ? <LoginForm onSuccess={(path) => navigate(path, { replace: true })} from={from} />
+              : <RegisterForm onSuccess={(path) => navigate(path, { replace: true })} />
+            }
           </div>
         </div>
       </section>
