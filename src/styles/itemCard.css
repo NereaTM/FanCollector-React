@@ -76,7 +76,6 @@
   opacity: 0;
   transform: translateY(-6px);
   pointer-events: none;
-
   transition: all 0.2s ease;
 }
 
@@ -86,7 +85,6 @@
   pointer-events: auto;
 }
 
-/* BOTONES */
 .icard-btn {
   width: 36px;
   height: 36px;
@@ -97,26 +95,25 @@
   border: none;
   cursor: pointer;
   transition: all 0.2s ease;
-  color: #fff;
+  color: var(--color-white);
 }
 
-/* EDITAR */
 .icard-btn-edit {
-  background: #facc15;
+  background: var(--color-warning);
 }
 
 .icard-btn-edit:hover {
-  background: #eab308;
+ background: #e08c00;
   transform: scale(1.1);
+  color: #fff;
 }
 
-/* ELIMINAR */
 .icard-btn-del {
-  background: #ef4444;
+  background: var(--color-error);
 }
 
 .icard-btn-del:hover {
-  background: #dc2626;
+  background: #c62828;
   transform: scale(1.1);
 }
 /* Cuerpo */
@@ -176,9 +173,9 @@
   margin-top: 8px;
   padding: 5px 8px;
   background: #fef9c3;
-  border-left: 3px solid #eab308;
+  border-left: 3px solid var(--color-warning);
   border-radius: 0 4px 4px 0;
-  color: #713f12;
+   color: var(--color-text);
   overflow: hidden;
   max-height: 2.8em;
   line-height: 1.4;
