@@ -8,23 +8,6 @@
   font-weight: 500;
 }
 
-.form-group input,
-.form-group textarea,
-.form-group select {
-  width: 100%;
-  padding: 0.75rem;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  border-radius: var(--border-radius-sm);
-  font-size: 1rem;
-  transition: border-color var(--transition-speed);
-}
-
-.form-group input:focus,
-.form-group textarea:focus,
-.form-group select:focus {
-  outline: none;
-  border-color: var(--color-primary);
-}
 
 .form-error {
   color: var(--color-error);
@@ -134,6 +117,89 @@
   color: var(--color-error);
   font-weight: 500;
   margin-bottom: 1rem;
+}
+
+/* Formularios crear/editar */
+
+.form-card {
+  background: var(--color-white);
+  border-radius: var(--border-radius-md);
+  padding: 2rem;
+  box-shadow: 0 4px 16px rgba(10, 35, 66, 0.08);
+}
+
+.form-page {
+  max-width: 860px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.coleccion-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.form-input,
+.form-textarea {
+  padding: 0.75rem;
+  border: 1px solid var(--color-border, #ddd);
+  border-radius: var(--border-radius-sm);
+  font-size: 1rem;
+  font-family: inherit;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.required {
+  color: var(--color-error);
+}
+
+.form-help {
+  font-size: 0.85rem;
+  opacity: 0.75;
+}
+
+.form-row {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.form-group--half {
+  flex: 1;
+  min-width: 240px;
+}
+
+.check {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  user-select: none;
+}
+
+.label-check {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.form-actions {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+}
+
+.form-footer {
+  opacity: 0.7;
+  margin: 0.75rem 0 0;
+  font-size: 0.9rem;
 }
 
 @media (max-width: 600px) {

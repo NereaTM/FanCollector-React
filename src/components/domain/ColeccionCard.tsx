@@ -50,7 +50,7 @@ export default function ColeccionCard({
           )}
         </div>
         <h3 className="card-title">{coleccion.nombre}</h3>
-        <p>{coleccion.descripcion || "Sin descripción disponible"}</p>
+        <p className="card-desc">{coleccion.descripcion || "Sin descripción disponible"}</p>
         <div className="card-footer-info">
           {coleccion?.nombreCreador && (
             <span className="card-meta">
