@@ -275,16 +275,9 @@
 }
 
 .sidebar-crear-btn {
-  width: 100%;
+  display: flex;
   justify-content: center;
-  background-color: #28a745 !important;
-  border-color: #28a745 !important;
-  color: white !important;
-}
-
-.sidebar-crear-btn:hover {
-  background-color: #218838 !important;
-  border-color: #218838 !important;
+  width: 100%;
 }
 
 /* Footer */

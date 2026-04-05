@@ -24,7 +24,7 @@
 }
 
 .star-activa {
-  color: #f0a500;
+  color: var(--color-rareza);
 }
 
 /* Detalle Coleccion */
@@ -59,8 +59,8 @@
   position: absolute;
   top: 0.75rem;
   right: 0.75rem;
-  background: #f59e0b;
-  color: #1a1a1a;
+  background: var(--color-warning);
+  color: var(--color-white);
   font-size: 0.72rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -89,7 +89,7 @@
 }
 
 .coleccion-detalle-card {
-  background: white;
+  background: var(--color-white);
   border-radius: var(--border-radius-md);
   padding: 1.25rem 1.5rem;
   box-shadow: 0 2px 8px rgba(10, 35, 66, 0.08);
@@ -202,6 +202,13 @@
   font-weight: 700;
   color: var(--color-primary);
   line-height: 1;
+}
+
+.mc-stat-label {
+  font-size: 0.72rem;
+  color: var(--color-text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 /* Controles */
