@@ -30,15 +30,11 @@ export default function ColeccionDetalleInfo({
         <div className="coleccion-detalle-item">
           <span className="coleccion-detalle-label">Creador</span>
           <span className="coleccion-detalle-value">
-            {esPropio
-              ? <Link to="/perfil" className="coleccion-info-link">
-                  {creadorNombre || "Mi perfil"}
+            {creadorId !== null && (esPropio || logueado)
+              ? <Link to={`/usuario/${creadorId}/perfil`} className="coleccion-info-link">
+                  {creadorNombre?.trim() || "Mi perfil"}
                 </Link>
-              : creadorId !== null && logueado
-                ? <Link to={`/perfil/${creadorId}`} className="coleccion-info-link">
-                    {creadorNombre?.trim() || "Desconocido"}
-                  </Link>
-                : <span>{creadorNombre?.trim() || "Desconocido"}</span>
+              : <span>{creadorNombre?.trim() || "Desconocido"}</span>
             }
           </span>
         </div>

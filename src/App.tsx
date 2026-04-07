@@ -20,8 +20,9 @@ import ColeccionesDeUsuario from "./pages/Coleccion/UsuarioColecciones";
 
 import ItemCrear from "./pages/Coleccion/ItemCrear";
 
-import PerfilPropio from "./pages/Perfil/Perfil";
+import PerfilUsuario from "./pages/Perfil/Perfil";
 import PerfilEditar from "./pages/Perfil/PerfilEditar";
+import PerfilCambiarPassword from "./pages/Perfil/PerfilCambiarPassword";
 
 
 function SessionExpiryWatcher() {
@@ -38,8 +39,9 @@ function SessionExpiryWatcher() {
  
       const avisoTimeout = setTimeout(() => {
        toast("Tu sesión expirará en 2 minutos.", {
-          icon: <i className="fas fa-exclamation-triangle" />,
-        });
+          icon: <i className="fas fa-exclamation-triangle" />, 
+          style: { background: "#fff3cd",color: "#856404", border: "1px solid #ffeeba" },}
+        );
       }, avisarMs);
  
       const cierreTimeout = setTimeout(() => {
@@ -72,8 +74,10 @@ function AppRoutes() {
 
 
       {/* ── Rutas protegidas ── */}
-        <Route path="perfil" element={<RequireAuth><PerfilPropio /></RequireAuth>} />
-        <Route path="perfil/editar" element={<RequireAuth><PerfilEditar /></RequireAuth>} />
+        <Route path="usuario/:userId/perfil" element={<RequireAuth><PerfilUsuario /></RequireAuth>} />
+        <Route path="usuario/:userId/perfil/editar" element={<RequireAuth><PerfilEditar /></RequireAuth>} />
+        <Route path="usuario/:userId/perfil/cambiar-password" element={<RequireAuth><PerfilCambiarPassword /></RequireAuth>} />
+
         <Route path="mis-colecciones" element={<RequireAuth><MisColecciones /></RequireAuth>} />
         <Route path="usuario/:userId/colecciones"element={<RequireAuth><ColeccionesDeUsuario /></RequireAuth>  }/>
         <Route path="mis-colecciones/:id" element={<RequireAuth><MisColeccionesDetalle /></RequireAuth>} />

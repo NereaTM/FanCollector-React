@@ -36,7 +36,7 @@ export default function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose:
               <li><NavLink to="/mis-colecciones"><i className="fa-solid fa-folder-open" /> Mis Colecciones</NavLink></li>
             )}
             {user && (
-              <li><NavLink to="/perfil"><i className="fas fa-user" /> Mi Perfil</NavLink></li>
+              <li><NavLink to={`/usuario/${user.id}/perfil`}><i className="fas fa-user" /> Mi Perfil</NavLink></li>
             )}
             {!user && (
               <li><NavLink to="/login"><i className="fas fa-sign-in-alt" /> Iniciar Sesión</NavLink></li>

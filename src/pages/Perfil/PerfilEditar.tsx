@@ -14,29 +14,30 @@ import ModalConfirm from "../../components/ui/ModalConfirm";
 
 export default function PerfilEditar() {
   const navigate = useNavigate();
-  const { id } = useParams();
+  const { userId } = useParams();
   const { user, logout } = useAuth();
- 
+
   const myId = user?.id ?? null;
-  const targetId = id ? Number(id) : myId;
-  const esAjeno = !!id;
+  const targetId = userId ? Number(userId) : myId;
+  const esAjeno = userId ? Number(userId) !== myId : false;
   const esAdmin = user?.rol === "ADMIN";
-  
-  const volverUrl = "/perfil";
- 
+
+  const volverUrl = `/usuario/${targetId ?? myId}/perfil`;
+
   const [usuario, setUsuario] = useState<AuthUser | null>(null);
   const [fields, setFields] = useState({ nombre: "", email: "", descripcion: "", contactoPublico: "", rol: "" });
   const [previewSrc, setPreviewSrc] = useState(defaultAvatar);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [modalGuardar, setModalGuardar] = useState(false);
   const [modalEliminar, setModalEliminar] = useState(false);
 
   const fileRef = useRef<HTMLInputElement>(null);
- 
+
   useEffect(() => {
     if (!targetId) return;
-     getUsuarioById(targetId)
+    getUsuarioById(targetId)
       .then((u: unknown) => {
         const perfil = u as AuthUser;
         setUsuario(perfil);
@@ -52,53 +53,56 @@ export default function PerfilEditar() {
       .catch((err: Error) => setError(err?.message || "Error al cargar el perfil"))
       .finally(() => setLoading(false));
   }, [targetId]);
- 
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
     setFields((prev) => ({ ...prev, [e.target.name]: e.target.value }));
- 
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) setPreviewSrc(URL.createObjectURL(file));
   };
- 
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!fields.nombre.trim()) { toast.error("El nombre es obligatorio"); return; }
-    if (!fields.email.trim()) { toast.error("El email es obligatorio"); return; }
-    if (!targetId) return;
- 
-    const formData = new FormData();
-    formData.append("nombre", fields.nombre.trim());
-    formData.append("email", fields.email.trim());
-    formData.append("descripcion", fields.descripcion.trim());
-    formData.append("contactoPublico", fields.contactoPublico.trim());
-    const archivo = fileRef.current?.files?.[0];
-    if (archivo) formData.append("archivo", archivo);
- 
-    setSaving(true);
-    try {
-      await editarUsuario(targetId, formData);
-      toast.success("Perfil actualizado correctamente");
-      navigate(volverUrl);
-    } catch (err) {
-      toast.error(getApiErrorMessage(err));
-      setSaving(false);
-    }
+    setModalGuardar(true);
   }
  
+  async function confirmarGuardar() {
+      if (!targetId) return;
+      const formData = new FormData();
+      formData.append("nombre", fields.nombre.trim());
+      formData.append("email", fields.email.trim());
+      formData.append("descripcion", fields.descripcion.trim());
+      formData.append("contactoPublico", fields.contactoPublico.trim());
+      const archivo = fileRef.current?.files?.[0];
+      if (archivo) formData.append("archivo", archivo);
+
+      setSaving(true);
+      setModalGuardar(false);
+      try {
+        await editarUsuario(targetId, formData);
+        toast.success("Perfil actualizado correctamente");
+        navigate(volverUrl);
+      } catch (err) {
+        toast.error(getApiErrorMessage(err));
+        setSaving(false);
+      }
+    }
+
   async function handleEliminarCuenta() {
-    if (!myId) return;
+    const idAEliminar = esAjeno ? targetId : myId;
+    if (!idAEliminar) return;
     try {
-      await eliminarUsuario(myId);
+      await eliminarUsuario(idAEliminar);
       toast.success("Cuenta eliminada correctamente");
       if (!esAjeno) {
-      logout();
-      navigate("/login");
-    } else {
-      navigate("/");
-    }
+        logout();
+        navigate("/login");
+      } else {
+        navigate("/");
+      }
     } catch (err) {
-      toast.error(getApiErrorMessage(err)); 
+      toast.error(getApiErrorMessage(err));
       setModalEliminar(false);
     }
   }
@@ -109,6 +113,14 @@ export default function PerfilEditar() {
   return (
     <>
       <ModalConfirm
+        abierto={modalGuardar}
+        titulo="¿Guardar cambios?"
+        mensaje="Se actualizará la información del perfil."
+        labelConfirmar="Sí, guardar"
+        onConfirmar={confirmarGuardar}
+        onCancelar={() => setModalGuardar(false)}
+      />
+      <ModalConfirm
         abierto={modalEliminar}
         titulo="¿Eliminar cuenta?"
         mensaje="Esta acción es permanente. Se eliminarán todos tus datos y no podrás recuperar tu cuenta."
@@ -117,7 +129,7 @@ export default function PerfilEditar() {
         onCancelar={() => setModalEliminar(false)}
       />
 
-    <div className="perfil-page">
+      <div className="perfil-page">
         <div className="perfil-banner">
           <div className="perfil-banner-inner">
             <div className="perfil-avatar-wrap">
@@ -140,8 +152,8 @@ export default function PerfilEditar() {
         </div>
 
         <div className="perfil-content">
-          <div className="perfil-card">
-            <h2 className="perfil-card-title"><i className="fas fa-edit" /> Editar perfil</h2>
+          <div className="form-card">
+            <h2 className="form-title"><i className="fas fa-edit" /> Editar perfil</h2>
             <form onSubmit={handleSubmit} className="coleccion-form">
 
               <div className="avatar-upload-section">
@@ -198,6 +210,9 @@ export default function PerfilEditar() {
                   <i className="fas fa-times" /> Cancelar
                 </Link>
               </div>
+              <p className="form-footer">
+                <span className="required">* Campos obligatorios</span>
+              </p>
             </form>
           </div>
           <div className="perfil-card perfil-card--danger">

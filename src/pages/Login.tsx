@@ -16,7 +16,7 @@ function LoginForm({ onSuccess, from }: { onSuccess: (path: string) => void; fro
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setFields((f) => ({ ...f, [e.target.name]: e.target.value }));
 
-  async function handleSubmit(e: React.BaseSyntheticEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
     if (!fields.email || !fields.password) {
@@ -69,7 +69,7 @@ function RegisterForm({ onSuccess }: { onSuccess: (path: string) => void }) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setFields((f) => ({ ...f, [e.target.name]: e.target.value }));
  
-  async function handleSubmit(e: React.BaseSyntheticEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
     const { nombre, apellido, email, password, confirmPassword } = fields;

@@ -41,7 +41,7 @@ export default function Footer() {
             <li><Link to="/colecciones">Colecciones</Link></li>
             {!user
               ? <li><Link to="/login">Iniciar Sesión</Link></li>
-              : <li><Link to="/perfil">Mi Perfil</Link></li>
+              : <li><Link to={`/usuario/${user.id}/perfil`}>Mi perfil</Link></li>
             }
           </ul>
         </div>

@@ -64,6 +64,7 @@
 }
 
 .perfil-card {
+  background: var(--color-white);
   color: var(--color-white);
   border-radius: var(--border-radius-md);
   padding: 1.5rem;
