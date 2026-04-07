@@ -66,3 +66,11 @@ export type UsuarioColeccionDetalle = {
   coleccion: Coleccion;
   nombreUsuario: string;
 };
+
+export type ColeccionForm = {
+  nombre: string;
+  descripcion: string;
+  categoria: string;
+  esPublica: boolean;
+  usableComoPlantilla: boolean;
+};

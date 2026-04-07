@@ -1,17 +1,21 @@
-import { useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
-import { crearColeccion } from "../../data/coleccionesApi";
+import { getColeccionById, editarColeccion } from "../../data/coleccionesApi";
 import { getApiErrorMessage } from "../../data/apiClient";
-import { useAuth } from "../../auth/AuthContext";
 import Breadcrumbs from "../../components/ui/Breadcrumbs";
 import ModalConfirm from "../../components/ui/ModalConfirm";
-import type { ColeccionForm } from "../../types/coleccion";;
+import EstadoPagina from "../../components/ui/EstadoPagina";
+import type { Coleccion } from "../../types/coleccion";
+import type { ColeccionForm } from "../../types/coleccion";
 
-export default function ColeccionCrear() {
-  const { user } = useAuth();
+export default function ColeccionEditar() {
+  const { id } = useParams();
   const navigate = useNavigate();
   const fileRef = useRef<HTMLInputElement>(null);
+
+  const idColeccion = Number(id);
+  const volverUrl = "/mis-colecciones";
 
   const [fields, setFields] = useState<ColeccionForm>({
     nombre: "",
@@ -20,24 +24,45 @@ export default function ColeccionCrear() {
     esPublica: false,
     usableComoPlantilla: false,
   });
+  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [modalGuardar, setModalGuardar] = useState(false);
   const [modalCancelar, setModalCancelar] = useState(false);
 
-  if (!user) return null;
+  useEffect(() => {
+    getColeccionById(idColeccion)
+      .then((c) => {
+        const col = c as Coleccion;
+        setFields({
+          nombre: col.nombre,
+          descripcion: col.descripcion ?? "",
+          categoria: col.categoria,
+          esPublica: col.esPublica,
+          usableComoPlantilla: col.usableComoPlantilla,
+        });
+      })
+      .catch((err: Error) => setError(err.message || "Error al cargar la colección"))
+      .finally(() => setLoading(false));
+  }, [idColeccion]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value, type } = e.target;
-    const checked = (e.target as HTMLInputElement).checked;
-    setFields((prev) => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
+    const { name, type } = e.target;
+    setFields((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? (e.target as HTMLInputElement).checked : e.target.value,
+    }));
   };
 
-  async function handleSubmit(e: React.FormEvent) {
+  function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!fields.nombre.trim()) { toast.error("El nombre es obligatorio"); return; }
     if (!fields.categoria.trim()) { toast.error("La categoría es obligatoria"); return; }
+    setModalGuardar(true);
+  }
 
+  async function confirmarGuardar() {
     const formData = new FormData();
-    formData.append("idCreador", String(user!.id));
     formData.append("nombre", fields.nombre.trim());
     formData.append("descripcion", fields.descripcion.trim());
     formData.append("categoria", fields.categoria.trim());
@@ -47,27 +72,51 @@ export default function ColeccionCrear() {
     if (archivo) formData.append("archivo", archivo);
 
     setSaving(true);
+    setModalGuardar(false);
     try {
-      await crearColeccion(formData);
-      toast.success("Colección creada correctamente");
-      navigate("/mis-colecciones");
+      await editarColeccion(idColeccion, formData);
+      toast.success("Colección actualizada correctamente");
+      navigate(volverUrl);
     } catch (err) {
       toast.error(getApiErrorMessage(err));
       setSaving(false);
     }
   }
 
+  if (loading) return <EstadoPagina loading="Cargando colección..." />;
+  if (error) return <EstadoPagina error={error} volverUrl={volverUrl} />;
+
   return (
     <>
+      <ModalConfirm
+        abierto={modalGuardar}
+        titulo="¿Guardar cambios?"
+        mensaje="Se actualizará la información de la colección."
+        labelConfirmar="Sí, guardar"
+        onConfirmar={confirmarGuardar}
+        onCancelar={() => setModalGuardar(false)}
+      />
+      <ModalConfirm
+        abierto={modalCancelar}
+        titulo="¿Cancelar la edición?"
+        mensaje="Se perderán los cambios realizados."
+        labelConfirmar="Sí, cancelar"
+        onConfirmar={() => navigate(volverUrl)}
+        onCancelar={() => setModalCancelar(false)}
+      />
+
       <Breadcrumbs items={[
         { label: "Inicio", to: "/" },
-        { label: "Mis Colecciones", to: "/mis-colecciones" },
-        { label: "Nueva colección" },
+        { label: "Catálogo", to: "/colecciones" },
+        { label: "Colección", to: volverUrl },
+        { label: "Editar" },
       ]} />
 
       <div className="form-page">
         <div className="form-card">
-          <h2 className="form-title"> <i className="fas fa-plus" /> Nueva colección </h2>
+          <h2 className="form-title">
+            <i className="fas fa-edit" /> Editar colección
+          </h2>
 
           <form onSubmit={handleSubmit} className="coleccion-form">
 
@@ -80,7 +129,7 @@ export default function ColeccionCrear() {
             <div className="form-group">
               <label htmlFor="categoria">Categoría <span className="required">*</span></label>
               <input type="text" id="categoria" name="categoria" className="form-input" required
-                placeholder='Ej.: "Anime", "Videojuegos", "Cómics" , "K-pop"...'
+                placeholder='Ej.: "Anime", "Videojuegos", "Cómics", "K-pop"...'
                 value={fields.categoria} onChange={handleChange} />
             </div>
 
@@ -94,7 +143,7 @@ export default function ColeccionCrear() {
               <label htmlFor="archivo">Imagen de portada</label>
               <input type="file" id="archivo" name="archivo" className="form-input"
                 accept="image/*" ref={fileRef} />
-              <small className="form-help">JPG, PNG o GIF. Máximo 15MB.</small>
+              <small className="form-help">JPG, PNG o GIF. Máximo 15MB. Deja vacío para mantener la actual.</small>
             </div>
 
             <div className="form-group">
@@ -117,7 +166,7 @@ export default function ColeccionCrear() {
 
             <div className="form-actions">
               <button type="submit" className="btn btn-primary" disabled={saving}>
-                <i className="fas fa-save" /> {saving ? "Creando..." : "Crear colección"}
+                <i className="fas fa-save" /> {saving ? "Guardando..." : "Guardar cambios"}
               </button>
               <button type="button" className="btn btn-outline" onClick={() => setModalCancelar(true)}>
                 <i className="fas fa-times" /> Cancelar
@@ -131,15 +180,6 @@ export default function ColeccionCrear() {
           </form>
         </div>
       </div>
-
-      <ModalConfirm
-        abierto={modalCancelar}
-        titulo="¿Cancelar la creación?"
-        mensaje="Se perderán los datos introducidos."
-        labelConfirmar="Sí, cancelar"
-        onConfirmar={() => navigate("/mis-colecciones")}
-        onCancelar={() => setModalCancelar(false)}
-      />
     </>
   );
 }
