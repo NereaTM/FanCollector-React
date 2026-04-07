@@ -54,3 +54,15 @@ export type Relacion = {
   id: number;
   esFavorita: boolean;
 } | null;
+
+export type UsuarioColeccionDetalle = {
+  id: number;
+  idUsuario: number;
+  idColeccion: number;
+  esFavorita: boolean;
+  esCreador: boolean;
+  esVisible: boolean;
+  fechaAgregada: string;
+  coleccion: Coleccion;
+  nombreUsuario: string;
+};

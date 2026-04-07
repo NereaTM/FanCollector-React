@@ -1,70 +1,76 @@
 import { useEffect, useState } from "react";
-import { getMisUsuarioColecciones, getColeccionById } from "../../data/coleccionesApi";
+import { useParams } from "react-router-dom";
+import { getMisUsuarioColeccionesDetalle } from "../../data/coleccionesApi";
 import { useAuth } from "../../auth/AuthContext";
 import Breadcrumbs from "../../components/ui/Breadcrumbs";
 import EstadoPagina from "../../components/ui/EstadoPagina";
 import ColeccionCard from "../../components/domain/ColeccionCard";
-import type { Coleccion, ColeccionConRelacion, UsuarioColeccion } from "../../types/coleccion";
+import type { UsuarioColeccionDetalle } from "../../types/coleccion";
 
 type Filtro = "todas" | "creadas" | "uso" | "favoritas";
-type Orden  = "az" | "za";
+type Orden = "az" | "za";
 
 export default function MisColecciones() {
   const { user } = useAuth();
+  const { userId } = useParams<{ userId?: string }>();
 
-  const [creadas, setCreadas] = useState<ColeccionConRelacion[]>([]);
-  const [unidas, setUnidas] = useState<ColeccionConRelacion[]>([]);
+  const esModoOtroUsuario = !!userId;
+  const idObjetivo = userId ?? user?.id;
+
+  const [creadas, setCreadas] = useState<UsuarioColeccionDetalle[]>([]);
+  const [unidas, setUnidas] = useState<UsuarioColeccionDetalle[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [filtro, setFiltro] = useState<Filtro>("todas");
   const [busqueda, setBusqueda] = useState("");
   const [orden, setOrden] = useState<Orden>("az");
+  const [nombreUsuario, setNombreUsuario] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!user?.id) return;
-    const userId = user.id;
+    if (!idObjetivo) {
+      setLoading(false);
+      return;
+    }
 
     async function cargar() {
       try {
-        const relaciones = await getMisUsuarioColecciones(userId) as UsuarioColeccion[];
-        const lista = Array.isArray(relaciones) ? relaciones : [];
-        const resultados = await Promise.all(
-          lista.map(async (uc) => {
-            const coleccion = await getColeccionById(uc.idColeccion) as Coleccion;
-            return { uc, coleccion };
-          })
-        );
-        setCreadas(resultados.filter((r) => r.uc.esCreador));
-        setUnidas(resultados.filter((r) => !r.uc.esCreador));
+        setLoading(true);
+        setError(null);
+        const detalle = await getMisUsuarioColeccionesDetalle(idObjetivo!);
+        const lista = Array.isArray(detalle) ? detalle : [];
+        setCreadas(lista.filter((r) => r.esCreador));
+        setUnidas(lista.filter((r) => !r.esCreador));
+        if (lista.length > 0) {
+          setNombreUsuario(lista[0].nombreUsuario);
+        }
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Error al cargar tus colecciones");
+        setError(err instanceof Error ? err.message : "Error al cargar colecciones");
       } finally {
         setLoading(false);
       }
     }
 
     void cargar();
-  }, [user?.id]);
+  }, [idObjetivo]);
 
-    function aplicar(lista: ColeccionConRelacion[]) {
-    let r = lista.filter((x) =>
-      x.coleccion.nombre.toLowerCase().includes(busqueda.toLowerCase())
-    );
-    if (filtro === "favoritas") r = r.filter((x) => x.uc.esFavorita);
-    return [...r].sort((a, b) =>
+  function aplicar(lista: UsuarioColeccionDetalle[]) {
+  return [...lista]
+    .filter((x) => x.coleccion.nombre.toLowerCase().includes(busqueda.toLowerCase()))
+    .filter((x) => filtro !== "favoritas" || x.esFavorita)
+    .sort((a, b) =>
       orden === "az"
         ? a.coleccion.nombre.localeCompare(b.coleccion.nombre)
         : b.coleccion.nombre.localeCompare(a.coleccion.nombre)
     );
-  }
+}
 
   const todas = [...creadas, ...unidas];
-  const totalFavs = todas.filter((r) => r.uc.esFavorita).length;
-  const listaFiltrada =
-  filtro === "creadas" ? aplicar(creadas) :
-  filtro === "uso" ? aplicar(unidas)  :
-  aplicar(todas);
+  const totalFavs = todas.filter((r) => r.esFavorita).length;
+  let listaBase = todas;
+  if (filtro === "creadas") listaBase = creadas;
+  if (filtro === "uso") listaBase = unidas;
 
+  const listaFiltrada = aplicar(listaBase);
 
   const STATS = [
     { label: "Total", count: todas.length },
@@ -82,13 +88,23 @@ export default function MisColecciones() {
 
   return (
     <>
-      <Breadcrumbs items={[{ label: "Inicio", to: "/" }, { label: "Mis Colecciones" }]} />
+      <Breadcrumbs
+        items={
+          esModoOtroUsuario
+            ? [{ label: "Inicio", to: "/" }, { label: `Colecciones de ${nombreUsuario ?? "usuario"}` }]
+            : [{ label: "Inicio", to: "/" }, { label: "Mis Colecciones" }]
+        }
+      />
 
       <div className="mc-page">
 
         <div className="mc-header">
           <div className="mc-header-left">
-            <h2>Mis colecciones</h2>
+            <h2>
+              {esModoOtroUsuario
+                ? `Colecciones de ${nombreUsuario ?? "usuario"}`
+                : "Mis colecciones"}
+            </h2>
             <p>Todo lo que coleccionas en un solo lugar</p>
           </div>
 
@@ -169,19 +185,18 @@ export default function MisColecciones() {
 
         {!loading && !error && listaFiltrada.length > 0 && (
           <div className="coleccion-list">
-            {listaFiltrada.map(({ uc, coleccion }) => (
+            {listaFiltrada.map((item) => (
               <ColeccionCard
-                key={uc.id}
-                coleccion={coleccion}
-                esFavorita={uc.esFavorita}
-                esCreador={uc.esCreador}
-                fechaAgregada={uc.fechaAgregada}
+                key={item.id}
+                coleccion={item.coleccion}
+                esFavorita={item.esFavorita}
+                esCreador={item.esCreador}
+                fechaAgregada={item.fechaAgregada}
                 urlBase="mis-colecciones"
               />
             ))}
           </div>
         )}
-
       </div>
     </>
   );
