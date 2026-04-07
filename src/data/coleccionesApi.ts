@@ -55,6 +55,10 @@ export function getUsuarioColeccionPorUsuarioYColeccion(idUsuario: number | stri
   );
 }
 
+export function getMisUsuarioColeccionesDetalle(idUsuario: number | string) {
+  return fetchAPI(`/usuario-colecciones/v2?idUsuario=${encodeURIComponent(idUsuario)}`);
+}
+
 // POST
 export function crearUsuarioColeccion(dto: Record<string, unknown>) {
   return fetchAPI("/usuario-colecciones/v2", { method: "POST", body: dto });
