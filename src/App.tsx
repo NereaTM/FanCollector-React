@@ -17,6 +17,7 @@ import ColeccionDetalle from "./pages/Coleccion/ColeccionDetalle";
 import MisColecciones from "./pages/Coleccion/UsuarioColecciones";
 import MisColeccionesDetalle from "./pages/Coleccion/UsuarioColeccionesDetalle";
 import ColeccionesDeUsuario from "./pages/Coleccion/UsuarioColecciones";
+import UsuarioColeccionesDetalleAjeno from "./pages/Coleccion/UsuarioColeccionesDetalleAjeno";
 
 import ColeccionCrear from "./pages/Coleccion/ColeccionCrear";
 import ColeccionEditar from "./pages/Coleccion/ColeccionEditar";
@@ -82,7 +83,8 @@ function AppRoutes() {
         <Route path="usuario/:userId/perfil/cambiar-password" element={<RequireAuth><PerfilCambiarPassword /></RequireAuth>} />
 
         <Route path="mis-colecciones" element={<RequireAuth><MisColecciones /></RequireAuth>} />
-        <Route path="usuario/:userId/colecciones"element={<RequireAuth><ColeccionesDeUsuario /></RequireAuth>  }/>
+        <Route path="usuario/:userId/colecciones"element={<RequireAuth><ColeccionesDeUsuario /></RequireAuth> }/>
+        <Route path="usuario/:userId/colecciones/:id" element={<RequireAuth><UsuarioColeccionesDetalleAjeno /></RequireAuth>} />
         <Route path="mis-colecciones/:id" element={<RequireAuth><MisColeccionesDetalle /></RequireAuth>} />
 
         <Route path="colecciones/crear" element={<RequireAuth><ColeccionCrear /></RequireAuth>} />
