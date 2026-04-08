@@ -21,6 +21,7 @@ import ColeccionesDeUsuario from "./pages/Coleccion/UsuarioColecciones";
 import ColeccionCrear from "./pages/Coleccion/ColeccionCrear";
 import ColeccionEditar from "./pages/Coleccion/ColeccionEditar";
 import ItemCrear from "./pages/Coleccion/ItemCrear";
+import ItemEditar from "./pages/Coleccion/ItemEditar";
 
 import PerfilUsuario from "./pages/Perfil/Perfil";
 import PerfilEditar from "./pages/Perfil/PerfilEditar";
@@ -87,6 +88,7 @@ function AppRoutes() {
         <Route path="colecciones/crear" element={<RequireAuth><ColeccionCrear /></RequireAuth>} />
         <Route path="colecciones/:id/editar" element={<RequireAuth><ColeccionEditar /></RequireAuth>} />
         <Route path="colecciones/:coleccionId/items/crear" element={<RequireAuth><ItemCrear /></RequireAuth>} />
+        <Route path="colecciones/:coleccionId/items/:itemId/editar" element={<RequireAuth><ItemEditar /></RequireAuth>} />
 
         <Route path="*" element={<NotFoundPage />} />
       </Route>
