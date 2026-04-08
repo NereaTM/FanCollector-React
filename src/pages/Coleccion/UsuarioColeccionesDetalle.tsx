@@ -256,6 +256,7 @@ export default function MisColeccionesDetalle() {
                 usuarioItem={misItems.find((u) => u.idItem === item.id) || null}
                 puedeEditar={puedeEditar}
                 idColeccion={idColeccion}
+                returnUrl={`/mis-colecciones/${idColeccion}`}
                 onEliminar={puedeEditar ? handleEliminarItem : null}
               />
             ))}

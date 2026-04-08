@@ -76,3 +76,11 @@ export type UsuarioItemPutDTO = {
   notas?: string;
   cantidad?: number;
 };
+
+export type ItemForm = {
+  nombre: string;
+  tipo: string;
+  rareza: string;
+  anioLanzamiento: string;
+  descripcion: string;
+};
