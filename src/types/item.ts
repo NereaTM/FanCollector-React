@@ -84,3 +84,14 @@ export type ItemForm = {
   anioLanzamiento: string;
   descripcion: string;
 };
+
+export type FilaItem = {
+  item: Item;
+  ui: UsuarioItemDetalleDTO | null;
+  esVisible: boolean;
+  estado: EstadoItem;
+  cantidad: number;
+  notas: string;
+  saving: boolean;
+  guardado: boolean;
+};

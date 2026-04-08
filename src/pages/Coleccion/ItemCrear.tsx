@@ -17,7 +17,7 @@ export default function ItemCrear() {
   const { user } = useAuth();
 
   const idColeccion = Number(coleccionId);
-  const returnUrl = new URLSearchParams(search).get("from") ?? `/colecciones/${idColeccion}`;
+  const returnUrl = new URLSearchParams(search).get("from") ?? `/mis-colecciones/${idColeccion}`;
 
   const [fields, setFields] = useState<ItemForm>({
     nombre: "",

@@ -290,6 +290,61 @@
   outline: none;
 }
 
+/* MisItemsEditar */
+.mis-items-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0 5rem;
+}
+ 
+.mis-items-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.9rem;
+}
+ 
+.mis-items-img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: var(--border-radius-sm);
+}
+ 
+.mis-items-nombre {
+  font-weight: 600;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+ 
+.mis-items-controles {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+ 
+.mis-items-controles .form-group {
+  margin-bottom: 0;
+}
+ 
+.mis-items-controles label {
+  font-size: 0.72rem;
+  color: var(--color-text-light);
+}
+ 
+/* Barra sticky */
+.mis-items-barra {
+  position: sticky;
+  bottom: 0;
+  background: var(--color-white);
+  border-top: 1px solid var(--color-border);
+  padding: 0.85rem 1.25rem;
+  box-shadow: 0 -4px 12px rgba(10, 35, 66, 0.08);
+}
+
 @media (max-width: 768px) {
   .coleccion-detalle-page {
     display: flex;
