@@ -29,6 +29,9 @@ import PerfilUsuario from "./pages/Perfil/Perfil";
 import PerfilEditar from "./pages/Perfil/PerfilEditar";
 import PerfilCambiarPassword from "./pages/Perfil/PerfilCambiarPassword";
 
+import AdminDashboard from "./pages/Perfil/AdminDashboard";
+import ModDashboard from "./pages/Perfil/ModDashboard";
+
 
 function SessionExpiryWatcher() {
   const { token, logout } = useAuth();
@@ -76,7 +79,7 @@ function AppRoutes() {
         <Route path="login" element={<Login />} />
         <Route path="colecciones" element={<Colecciones />} />
         <Route path="colecciones/:id" element={<ColeccionDetalle />} />
-
+        <Route path="*" element={<NotFoundPage />} />
 
       {/* ── Rutas protegidas ── */}
         <Route path="usuario/:userId/perfil" element={<RequireAuth><PerfilUsuario /></RequireAuth>} />
@@ -93,7 +96,9 @@ function AppRoutes() {
         <Route path="colecciones/:coleccionId/items/crear" element={<RequireAuth><ItemCrear /></RequireAuth>} />
         <Route path="colecciones/:coleccionId/items/:itemId/editar" element={<RequireAuth><ItemEditar /></RequireAuth>} />
         <Route path="mis-colecciones/:id/items/editar" element={<RequireAuth><MisItemsEditar /></RequireAuth>} />
-        <Route path="*" element={<NotFoundPage />} />
+
+        <Route path="admin/dashboard" element={<RequireAuth><AdminDashboard /></RequireAuth>} />
+        <Route path="admin/moderacion" element={<RequireAuth><ModDashboard /></RequireAuth>} />
       </Route>
     </Routes>
   );

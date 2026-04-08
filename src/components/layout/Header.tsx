@@ -77,11 +77,26 @@ export default function Header({ onToggleSidebar }: { onToggleSidebar: () => voi
  
               {dropdownOpen && (
                 <div className="user-dropdown-menu">
-                <Link
-                  to={`/usuario/${user?.id}/perfil`} className="user-dropdown-item" onClick={() => setDropdownOpen(false)}>
-                  <i className="fas fa-user" /> Mi Perfil
-                </Link>    
-                  <a href="#" className="user-dropdown-item danger" onClick={handleLogout}>
+                  <Link
+                    to={`/usuario/${user?.id}/perfil`} className="user-dropdown-item" onClick={() => setDropdownOpen(false)}>
+                    <i className="fas fa-user" /> Mi Perfil
+                  </Link>
+
+                  {(user?.rol === "ADMIN" || user?.rol === "MODS") && (
+                    <Link
+                      to="/admin/moderacion" className="user-dropdown-item" onClick={() => setDropdownOpen(false)} >
+                      <i className="fas fa-shield-alt" /> Moderación
+                    </Link>
+                  )}
+
+                  {user?.rol === "ADMIN" && (
+                    <Link
+                      to="/admin/dashboard" className="user-dropdown-item" onClick={() => setDropdownOpen(false)} >
+                      <i className="fas fa-user-shield" /> Admin
+                    </Link>
+                  )}
+
+                  <a href="#" className="user-dropdown-item danger" onClick={handleLogout} >
                     <i className="fas fa-sign-out-alt" /> Cerrar Sesión
                   </a>
                 </div>

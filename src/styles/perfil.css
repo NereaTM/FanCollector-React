@@ -175,6 +175,100 @@
   margin-bottom: 1rem;
 }
 
+/* Dashboards admin / mod */
+ 
+.db-tabla-wrapper {
+  overflow-x: auto;
+  padding: 1.5rem 2rem;
+}
+ 
+.db-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+ 
+.db-tabla thead th {
+  text-align: left;
+  padding: 0.6rem 0.85rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-light);
+  border-bottom: 2px solid rgba(10, 35, 66, 0.1);
+  white-space: nowrap;
+}
+ 
+.db-tabla tbody tr {
+  border-bottom: 1px solid rgba(10, 35, 66, 0.06);
+}
+ 
+.db-tabla tbody tr:hover {
+  background: var(--color-background);
+}
+ 
+.db-tabla td {
+  padding: 0.65rem 0.85rem;
+  vertical-align: middle;
+}
+ 
+.th-ord {
+  cursor: pointer;
+  user-select: none;
+}
+ 
+.th-ord:hover {
+  color: var(--color-primary);
+}
+ 
+.td-id {
+  color: var(--color-text-light);
+  font-size: 0.78rem;
+  font-variant-numeric: tabular-nums;
+}
+ 
+.td-fecha {
+  color: var(--color-text-light);
+  font-size: 0.82rem;
+  white-space: nowrap;
+}
+ 
+.db-nombre-link {
+  color: var(--color-primary);
+  font-weight: 600;
+  text-decoration: none;
+}
+ 
+.db-nombre-link:hover {
+  text-decoration: underline;
+}
+
+.db-thumb {
+  width: 36px;
+  height: 36px;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+  border: 1px solid rgba(0,0,0,0.08);
+}
+ 
+/* Badges de rol */
+ 
+.rol-badge {
+  display: inline-block;
+  padding: 0.18rem 0.55rem;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+ 
+.rol-admin  { background: #fde8d8; color: #b94a08; }
+.rol-mods   { background: #d8eafd; color: #085ab9; }
+.rol-user   { background: #e8fde8; color: #087a08; }
+
 @media (max-width: 600px) {
   .perfil-banner-inner {
     flex-direction: column;

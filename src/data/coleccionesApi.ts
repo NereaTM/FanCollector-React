@@ -68,6 +68,14 @@ export function crearUsuarioColeccion(dto: Record<string, unknown>) {
 export function patchFavorita (idUsuarioColeccion: number | string, esFavorita: boolean) {
   return fetchAPI(`/usuario-colecciones/${idUsuarioColeccion}/favorita`, { method: "PATCH", body: { esFavorita } });
 }
+ 
+export function patchColeccionPublica(id: number | string, esPublica: boolean) {
+  return fetchAPI(`/colecciones/${id}/publico`, { method: "PATCH", body: { esPublica } });
+}
+ 
+export function patchColeccionPlantilla(id: number | string, usableComoPlantilla: boolean) {
+  return fetchAPI(`/colecciones/${id}/plantilla`, { method: "PATCH", body: { usableComoPlantilla } });
+}
 
 // DELETE
 export function eliminarUsuarioColeccion(id: number | string) {
