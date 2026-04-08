@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { getColeccionById, borrarColeccion, eliminarUsuarioColeccion, getUsuarioColeccionPorUsuarioYColeccion, patchFavorita } from "../../data/coleccionesApi";
@@ -39,41 +39,43 @@ export default function MisColeccionesDetalle() {
   const [togFav, setTogFav] = useState(false);
   const [modal, setModal] = useState<Modal>(null);
 
-  const cargar = useCallback(async () => {
-    if (!user?.id) return;
-    try {
-      // Colección base
-      const col = await getColeccionById(idColeccion) as Coleccion;
-      setColeccion(col);
-      // Relación usuario-colección para saber si es favorita
-      const rel = await getUsuarioColeccionPorUsuarioYColeccion(user.id, idColeccion)
-        .then((r: unknown) => {
-          const item = (Array.isArray(r) ? r[0] : r) as { id: number; esFavorita: boolean } | null;
-          if (!item) return null;
-          return { id: item.id, esFavorita: item.esFavorita };
-        })
-        .catch(() => null);
-      setRelacion(rel);
-      // Items de la colección
-      const its = await getItemsPorColeccion(idColeccion);
-      setItems(Array.isArray(its) ? its as Item[] : []);
-      // Items del usuario (estado, visibilidad, etc.)
-      const todos = await getMisUsuarioItems(user.id).catch(() => []);
-      setMisItems((todos as UsuarioItemOut[]).filter((ui) => ui.idColeccion === idColeccion));
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Error al cargar la colección");
-    } finally {
-      setLoading(false);
-    }
-  }, [idColeccion, user?.id]);
-
   useEffect(() => {
-    // Validación del id antes de cargar datos
     if (!Number.isFinite(idColeccion) || idColeccion <= 0) {
-      setError("ID de colección no válido"); setLoading(false); return;
+      setError("ID de colección no válido");
+      setLoading(false);
+      return;
+    }
+
+    if (!user?.id) return;
+    const userId = user.id;
+    
+    async function cargar() {
+      try {
+        const col = await getColeccionById(idColeccion) as Coleccion;
+        setColeccion(col);
+        // Relación usuario-colección para saber si es favorita
+        const rel = await getUsuarioColeccionPorUsuarioYColeccion(userId, idColeccion)
+          .then((r: unknown) => {
+            const item = (Array.isArray(r) ? r[0] : r) as { id: number; esFavorita: boolean } | null;
+            if (!item) return null;
+            return { id: item.id, esFavorita: item.esFavorita };
+          })
+          .catch(() => null);
+        setRelacion(rel);
+        // Items de la colección
+        const its = await getItemsPorColeccion(idColeccion);
+        setItems(Array.isArray(its) ? its as Item[] : []);
+        // Items del usuario (estado, visibilidad, etc.)
+        const todos = await getMisUsuarioItems(userId).catch(() => []);
+        setMisItems((todos as UsuarioItemOut[]).filter((ui) => ui.idColeccion === idColeccion));
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Error al cargar la colección");
+      } finally {
+        setLoading(false);
+      }
     }
     cargar();
-  }, [cargar, idColeccion]);
+  }, [idColeccion, user?.id]);
 
   async function handleTogFavorita() {
     if (!relacion?.id || togFav) return;
@@ -119,11 +121,14 @@ export default function MisColeccionesDetalle() {
   async function confirmarEliminarItem() {
     const itemId = modal?.id;
     setModal(null);
-    if (!itemId) return;
+    if (!itemId || !user?.id) return;
     try {
       await borrarItem(itemId);
       toast.success("Item eliminado");
-      await cargar();
+      const items = await getItemsPorColeccion(idColeccion);
+      setItems(Array.isArray(items) ? items as Item[] : []);
+      const todos = await getMisUsuarioItems(user.id).catch(() => []);
+      setMisItems((todos as UsuarioItemOut[]).filter((ui) => ui.idColeccion === idColeccion));
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "No se pudo eliminar el item");
     }

@@ -192,7 +192,7 @@ export default function MisColecciones() {
                 esFavorita={item.esFavorita}
                 esCreador={item.esCreador}
                 fechaAgregada={item.fechaAgregada}
-                urlBase="mis-colecciones"
+                urlBase={esModoOtroUsuario ? `usuario/${userId}/colecciones` : "mis-colecciones"}
               />
             ))}
           </div>
