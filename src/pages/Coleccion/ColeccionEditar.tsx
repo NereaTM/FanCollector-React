@@ -1,21 +1,23 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import { getColeccionById, editarColeccion } from "../../data/coleccionesApi";
 import { getApiErrorMessage } from "../../data/apiClient";
+import { resolveImgUrl } from "../../utils/imagenes";
+import { useImagenPreview } from "../../hooks/useImagenPreview";
 import Breadcrumbs from "../../components/ui/Breadcrumbs";
 import ModalConfirm from "../../components/ui/ModalConfirm";
 import EstadoPagina from "../../components/ui/EstadoPagina";
-import type { Coleccion } from "../../types/coleccion";
-import type { ColeccionForm } from "../../types/coleccion";
+import type { Coleccion, ColeccionForm } from "../../types/coleccion";
+import defaultImg from "../../assets/default-collection.jpg";
 
 export default function ColeccionEditar() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const fileRef = useRef<HTMLInputElement>(null);
+  const { previewSrc, fileRef, handleFileChange, setImagenServidor } = useImagenPreview(defaultImg);
 
   const idColeccion = Number(id);
-  const volverUrl = "/mis-colecciones";
+  const volverUrl = `/mis-colecciones/${idColeccion}`;
 
   const [fields, setFields] = useState<ColeccionForm>({
     nombre: "",
@@ -41,6 +43,7 @@ export default function ColeccionEditar() {
           esPublica: col.esPublica,
           usableComoPlantilla: col.usableComoPlantilla,
         });
+        setImagenServidor(resolveImgUrl(col.imagenPortada) || defaultImg);
       })
       .catch((err: Error) => setError(err.message || "Error al cargar la colección"))
       .finally(() => setLoading(false));
@@ -56,8 +59,6 @@ export default function ColeccionEditar() {
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!fields.nombre.trim()) { toast.error("El nombre es obligatorio"); return; }
-    if (!fields.categoria.trim()) { toast.error("La categoría es obligatoria"); return; }
     setModalGuardar(true);
   }
 
@@ -107,9 +108,9 @@ export default function ColeccionEditar() {
 
       <Breadcrumbs items={[
         { label: "Inicio", to: "/" },
-        { label: "Catálogo", to: "/colecciones" },
-        { label: "Colección", to: volverUrl },
-        { label: "Editar" },
+        { label: "Mis Colecciones", to: "/mis-colecciones" },
+        { label: fields.nombre || "Colección", to: volverUrl },
+        { label: "Editar colección" },
       ]} />
 
       <div className="form-page">
@@ -141,8 +142,12 @@ export default function ColeccionEditar() {
 
             <div className="form-group">
               <label htmlFor="archivo">Imagen de portada</label>
+              <div className="img-preview-wrap">
+                <img src={previewSrc} alt="Vista previa de la portada"
+                  className="img-preview img-preview--collection" />
+              </div>
               <input type="file" id="archivo" name="archivo" className="form-input"
-                accept="image/*" ref={fileRef} />
+                accept="image/*" ref={fileRef} onChange={handleFileChange} />
               <small className="form-help">JPG, PNG o GIF. Máximo 15MB. Deja vacío para mantener la actual.</small>
             </div>
 

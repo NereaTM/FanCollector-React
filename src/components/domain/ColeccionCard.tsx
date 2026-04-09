@@ -2,17 +2,7 @@ import { Link } from "react-router-dom";
 import defaultImg from "../../assets/default-collection.jpg";
 import { resolveImgUrl } from "../../utils/imagenes";
 import { formatDate } from "../../utils/date";
-import type { Coleccion } from "../../types/coleccion";
-
-type Props = {
-  coleccion: Coleccion;
-  // MisColecciones
-  esFavorita?: boolean;
-  esCreador?: boolean;
-  fechaAgregada?: string;
-  // mis-colecciones vs colecciones
-  urlBase?: string;
-};
+import type { ColeccionCardProps } from "../../types/coleccion";
 
 export default function ColeccionCard({
   coleccion,
@@ -20,7 +10,7 @@ export default function ColeccionCard({
   esCreador = false,
   fechaAgregada,
   urlBase = "colecciones",
-}: Props) {
+}: ColeccionCardProps) {
   const imgSrc = resolveImgUrl(coleccion.imagenPortada) || defaultImg;
   const url = `/${urlBase}/${coleccion.id}`;
 

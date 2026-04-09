@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import { AuthProvider } from "./auth/AuthContext";
 import { useAuth } from "./auth/AuthContext";
 import RequireAuth from "./auth/RequireAuth";
-
+import RequireRole from "./auth/RequireRole";
 
 import Layout from "./components/layout/Layout";
 import HomePage from "./pages/HomePage";
@@ -35,28 +35,28 @@ import ModDashboard from "./pages/Perfil/ModDashboard";
 
 function SessionExpiryWatcher() {
   const { token, logout } = useAuth();
- 
+
   useEffect(() => {
     if (!token) return;
     try {
       const payload = JSON.parse(atob(token.split(".")[1])) as { exp: number };
       const expMs = payload.exp * 1000; // exp viene en segundos, lo pasamos a ms
       const avisarMs = expMs - Date.now() - 2 * 60 * 1000; // 2 min antes
- 
+
       if (avisarMs <= 0) return;
- 
+
       const avisoTimeout = setTimeout(() => {
-       toast("Tu sesión expirará en 2 minutos.", {
-          icon: <i className="fas fa-exclamation-triangle" />, 
-          style: { background: "#fff3cd",color: "#856404", border: "1px solid #ffeeba" },}
-        );
+        toast("Tu sesión expirará en 2 minutos.", {
+          icon: <i className="fas fa-exclamation-triangle" />,
+          style: { background: "#fff3cd", color: "#856404", border: "1px solid #ffeeba" },
+        });
       }, avisarMs);
- 
+
       const cierreTimeout = setTimeout(() => {
         toast.error("Sesión expirada. Por favor inicia sesión de nuevo.");
         logout();
       }, expMs - Date.now());
- 
+
       return () => {
         clearTimeout(avisoTimeout);
         clearTimeout(cierreTimeout);
@@ -65,7 +65,7 @@ function SessionExpiryWatcher() {
       // Si el token no es válido, ignore
     }
   }, [token, logout]);
- 
+
   return null;
 }
 
@@ -87,7 +87,7 @@ function AppRoutes() {
         <Route path="usuario/:userId/perfil/cambiar-password" element={<RequireAuth><PerfilCambiarPassword /></RequireAuth>} />
 
         <Route path="mis-colecciones" element={<RequireAuth><MisColecciones /></RequireAuth>} />
-        <Route path="usuario/:userId/colecciones"element={<RequireAuth><ColeccionesDeUsuario /></RequireAuth> }/>
+        <Route path="usuario/:userId/colecciones" element={<RequireAuth><ColeccionesDeUsuario /></RequireAuth>} />
         <Route path="usuario/:userId/colecciones/:id" element={<RequireAuth><UsuarioColeccionesDetalleAjeno /></RequireAuth>} />
         <Route path="mis-colecciones/:id" element={<RequireAuth><MisColeccionesDetalle /></RequireAuth>} />
 
@@ -97,8 +97,9 @@ function AppRoutes() {
         <Route path="colecciones/:coleccionId/items/:itemId/editar" element={<RequireAuth><ItemEditar /></RequireAuth>} />
         <Route path="mis-colecciones/:id/items/editar" element={<RequireAuth><MisItemsEditar /></RequireAuth>} />
 
-        <Route path="admin/dashboard" element={<RequireAuth><AdminDashboard /></RequireAuth>} />
-        <Route path="admin/moderacion" element={<RequireAuth><ModDashboard /></RequireAuth>} />
+        {/* ── Rutas protegidas por rol ── */}
+        <Route path="admin/dashboard" element={ <RequireAuth> <RequireRole allowedRoles={["ADMIN"]}> <AdminDashboard /> </RequireRole> </RequireAuth>} />
+        <Route path="admin/moderacion" element={ <RequireAuth> <RequireRole allowedRoles={["ADMIN", "MODS"]}> <ModDashboard /> </RequireRole> </RequireAuth>} />
       </Route>
     </Routes>
   );

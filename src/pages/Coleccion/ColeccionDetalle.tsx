@@ -5,20 +5,15 @@ import { getApiErrorMessage } from "../../data/apiClient";
 import { getItemsPorColeccion, borrarItem } from "../../data/itemsApi";
 import { getColeccionById, crearUsuarioColeccion, getUsuarioColeccionPorUsuarioYColeccion, borrarColeccion } from "../../data/coleccionesApi";
 import { useAuth } from "../../auth/AuthContext";
-import { resolveImgUrl } from "../../utils/imagenes";
 import Breadcrumbs from "../../components/ui/Breadcrumbs";
 import EstadoPagina from "../../components/ui/EstadoPagina";
 import ModalConfirm from "../../components/ui/ModalConfirm";
 import PanelAdmin from "../../components/ui/PanelAdmin";
 import Aviso from "../../components/ui/Aviso";
-import ColeccionDetalleImagen from "../../components/domain/ColeccionDetalleImagen";
-import ColeccionDetalleInfo from "../../components/domain/ColeccionDetalleInfo";
-import ColeccionDetalleCta from "../../components/domain/ColeccionDetalleCta";
+import ColeccionDetallePanel from "../../components/domain/ColeccionDetallePanel";
 import ItemCard from "../../components/domain/ItemCard";
-import defaultImg from "../../assets/default-collection.jpg";
 import type { Coleccion } from "../../types/coleccion";
 import type { Item } from "../../types/item";
-
 
 export default function ColeccionDetalle() {
   // id de ruta
@@ -115,14 +110,11 @@ export default function ColeccionDetalle() {
     <EstadoPagina titulo="Error" error={error ?? undefined}
       volverUrl="/colecciones" volverTexto="Volver al catálogo" />
   );
-  
+
   // Datos de la colección ya cargada
   const publico = coleccion.esPublica;
   const plantilla = coleccion.usableComoPlantilla;
   const puedeModerar = esAdmin || (esMod && publico);
-  const creadorId = coleccion.idCreador ?? null;
-  const creadorNombre = coleccion.nombreCreador ?? "Desconocido";
-  const imgSrc = resolveImgUrl(coleccion.imagenPortada) || defaultImg;
 
   return (
     <>
@@ -133,36 +125,13 @@ export default function ColeccionDetalle() {
       ]} />
 
       <div className="coleccion-detalle-page">
-
-        <ColeccionDetalleImagen
-          imgSrc={imgSrc}
-          nombre={coleccion.nombre}
-          esPlantilla={plantilla}
+        <ColeccionDetallePanel
+          coleccion={coleccion}
+          logueado={logueado}
+          yaUnido={yaUnido}
+          uniendose={uniendose}
+          onUnirse={publico && plantilla ? handleUnirse : undefined}
         />
-
-        <div className="coleccion-detalle-info">
-          <div className="coleccion-detalle-header">
-            <h2 className="coleccion-detalle-nombre">{coleccion.nombre}</h2>
-          </div>
-
-          <ColeccionDetalleInfo
-            categoria={coleccion.categoria}
-            creadorId={creadorId}
-            creadorNombre={creadorNombre}
-            esPublica={publico}
-            descripcion={coleccion.descripcion || ""}
-            logueado={logueado}
-          />
-
-          {publico && plantilla && (
-            <ColeccionDetalleCta
-              logueado={logueado}
-              yaUnido={yaUnido}
-              uniendose={uniendose}
-              onUnirse={handleUnirse}
-            />
-          )}
-        </div>
 
         {puedeModerar && (
           <div className="coleccion-detalle-card coleccion-detalle-card--admin">
@@ -177,7 +146,6 @@ export default function ColeccionDetalle() {
             />
           </div>
         )}
-
       </div>
 
       <section className="section bg-light">
@@ -196,7 +164,7 @@ export default function ColeccionDetalle() {
                 item={item}
                 puedeEditar={puedeModerar}
                 idColeccion={idColeccion}
-                returnUrl={puedeModerar ? `/colecciones/${idColeccion}` : null}
+                volverUrl={puedeModerar ? `/colecciones/${idColeccion}` : null}
                 onEliminar={puedeModerar ? (id) => setModalItem(id) : null}
               />
             ))}
@@ -212,7 +180,6 @@ export default function ColeccionDetalle() {
         onConfirmar={confirmarBorrar}
         onCancelar={() => setModalBorrar(false)}
       />
-
       <ModalConfirm
         abierto={!!modalItem}
         titulo="¿Eliminar este item?"

@@ -12,14 +12,6 @@ export type AuthUser = {
   fechaRegistro?: string;
 };
 
-export type LoginResponse = {
-  token: string;
-  id: number;
-  email: string;
-  nombre: string;
-  rol: RolUsuario;
-};
-
 export type RegisterRequest = {
   nombre: string;
   apellido?: string;

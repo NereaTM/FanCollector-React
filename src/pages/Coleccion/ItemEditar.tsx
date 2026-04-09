@@ -1,12 +1,15 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import toast from "react-hot-toast";
 import { getItemById, editarItem } from "../../data/itemsApi";
 import { getApiErrorMessage } from "../../data/apiClient";
+import { resolveImgUrl } from "../../utils/imagenes";
+import { useImagenPreview } from "../../hooks/useImagenPreview";
 import Breadcrumbs from "../../components/ui/Breadcrumbs";
 import ModalConfirm from "../../components/ui/ModalConfirm";
 import EstadoPagina from "../../components/ui/EstadoPagina";
 import type { Item, ItemForm } from "../../types/item";
+import defaultImg from "../../assets/default-collection.jpg";
 
 const RAREZAS = ["COMUN", "RARO", "EPICO", "LEGENDARIO"] as const;
 
@@ -14,11 +17,11 @@ export default function ItemEditar() {
   const { coleccionId, itemId } = useParams();
   const { search } = useLocation();
   const navigate = useNavigate();
-  const fileRef = useRef<HTMLInputElement>(null);
+  const { previewSrc, fileRef, handleFileChange, setImagenServidor } = useImagenPreview(defaultImg);
 
   const idColeccion = Number(coleccionId);
   const idItem = Number(itemId);
-  const returnUrl = new URLSearchParams(search).get("from") ?? `/colecciones/${idColeccion}`;
+  const volverUrl = new URLSearchParams(search).get("from") ?? `/colecciones/${idColeccion}`;
 
   const [fields, setFields] = useState<ItemForm>({
     nombre: "",
@@ -44,6 +47,7 @@ export default function ItemEditar() {
           anioLanzamiento: item.anioLanzamiento ? String(item.anioLanzamiento) : "",
           descripcion: item.descripcion ?? "",
         });
+        setImagenServidor(resolveImgUrl(item.imagenUrl) || defaultImg);
       })
       .catch((err: Error) => setError(err.message || "Error al cargar el item"))
       .finally(() => setLoading(false));
@@ -56,11 +60,9 @@ export default function ItemEditar() {
       [name]: type === "checkbox" ? (e.target as HTMLInputElement).checked : e.target.value,
     }));
   };
-  
+
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!fields.nombre.trim()) { toast.error("El nombre es obligatorio"); return; }
-    if (!fields.tipo.trim()) { toast.error("El tipo es obligatorio"); return; }
     setModalGuardar(true);
   }
 
@@ -82,7 +84,7 @@ export default function ItemEditar() {
     try {
       await editarItem(idItem, formData);
       toast.success("Item actualizado correctamente");
-      navigate(returnUrl);
+      navigate(volverUrl);
     } catch (err) {
       toast.error(getApiErrorMessage(err));
       setSaving(false);
@@ -90,7 +92,7 @@ export default function ItemEditar() {
   }
 
   if (loading) return <EstadoPagina loading="Cargando item..." />;
-  if (error) return <EstadoPagina error={error} volverUrl={returnUrl} />;
+  if (error) return <EstadoPagina error={error} volverUrl={volverUrl} />;
 
   return (
     <>
@@ -107,14 +109,14 @@ export default function ItemEditar() {
         titulo="¿Cancelar la edición?"
         mensaje="Se perderán los cambios realizados."
         labelConfirmar="Sí, cancelar"
-        onConfirmar={() => navigate(returnUrl)}
+        onConfirmar={() => navigate(volverUrl)}
         onCancelar={() => setModalCancelar(false)}
       />
 
       <Breadcrumbs items={[
         { label: "Inicio", to: "/" },
         { label: "Mis Colecciones", to: "/mis-colecciones" },
-        { label: "Colección", to: returnUrl },
+        { label: fields.nombre || "Item", to: volverUrl },
         { label: "Editar item" },
       ]} />
 
@@ -157,8 +159,12 @@ export default function ItemEditar() {
 
             <div className="form-group">
               <label htmlFor="archivo">Imagen</label>
+              <div className="img-preview-wrap">
+                <img src={previewSrc} alt="Vista previa del item"
+                  className="img-preview img-preview--item" />
+              </div>
               <input type="file" id="archivo" name="archivo" className="form-input"
-                accept="image/*" ref={fileRef} />
+                accept="image/*" ref={fileRef} onChange={handleFileChange} />
               <small className="form-help">JPG, PNG o GIF. Máximo 15MB. Deja vacío para mantener la actual.</small>
             </div>
 

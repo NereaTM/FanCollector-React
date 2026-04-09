@@ -1,25 +1,17 @@
 import { Link } from "react-router-dom";
 import defaultImg from "../../assets/default-collection.jpg";
 import { resolveImgUrl } from "../../utils/imagenes";
-import type { Item, UsuarioItemOut } from "../../types/item";
+import type { ItemCardProps } from "../../types/item";
 
-type Props = {
-  item: Item;
-  usuarioItem?: UsuarioItemOut | null;
-  puedeEditar?: boolean;
-  idColeccion?: number | null;
-  returnUrl?: string | null;
-  onEliminar?: ((id: number) => void) | null;
-};
 
 export default function ItemCard({
   item,
   usuarioItem = null,
   puedeEditar = false,
   idColeccion = null,
-  returnUrl = null,
+  volverUrl = null,
   onEliminar = null,
-}: Props) {
+}: ItemCardProps) {
   const imgSrc = resolveImgUrl(item.imagenUrl) || defaultImg;
   const estado = usuarioItem?.estado ?? null;
   const cantidad = usuarioItem?.cantidad ?? null;
@@ -45,7 +37,7 @@ export default function ItemCard({
           <div className="icard-actions">
             <Link
               to={`/colecciones/${idColeccion}/items/${item.id}/editar${
-                returnUrl ? `?from=${encodeURIComponent(returnUrl)}` : ""
+                volverUrl ? `?from=${encodeURIComponent(volverUrl)}` : ""
               }`}
               className="icard-btn icard-btn-edit"
               aria-label={`Editar ${item.nombre}`}

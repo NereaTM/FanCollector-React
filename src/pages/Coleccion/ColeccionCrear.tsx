@@ -1,17 +1,19 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { crearColeccion } from "../../data/coleccionesApi";
 import { getApiErrorMessage } from "../../data/apiClient";
 import { useAuth } from "../../auth/AuthContext";
+import { useImagenPreview } from "../../hooks/useImagenPreview";
 import Breadcrumbs from "../../components/ui/Breadcrumbs";
 import ModalConfirm from "../../components/ui/ModalConfirm";
-import type { ColeccionForm } from "../../types/coleccion";;
+import type { ColeccionForm } from "../../types/coleccion";
+import defaultImg from "../../assets/default-collection.jpg";
 
 export default function ColeccionCrear() {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const fileRef = useRef<HTMLInputElement>(null);
+  const { previewSrc, fileRef, handleFileChange } = useImagenPreview(defaultImg);
 
   const [fields, setFields] = useState<ColeccionForm>({
     nombre: "",
@@ -33,8 +35,6 @@ export default function ColeccionCrear() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!fields.nombre.trim()) { toast.error("El nombre es obligatorio"); return; }
-    if (!fields.categoria.trim()) { toast.error("La categoría es obligatoria"); return; }
 
     const formData = new FormData();
     formData.append("idCreador", String(user!.id));
@@ -67,7 +67,7 @@ export default function ColeccionCrear() {
 
       <div className="form-page">
         <div className="form-card">
-          <h2 className="form-title"> <i className="fas fa-plus" /> Nueva colección </h2>
+          <h2 className="form-title"><i className="fas fa-plus" /> Nueva colección</h2>
 
           <form onSubmit={handleSubmit} className="coleccion-form">
 
@@ -80,7 +80,7 @@ export default function ColeccionCrear() {
             <div className="form-group">
               <label htmlFor="categoria">Categoría <span className="required">*</span></label>
               <input type="text" id="categoria" name="categoria" className="form-input" required
-                placeholder='Ej.: "Anime", "Videojuegos", "Cómics" , "K-pop"...'
+                placeholder='Ej.: "Anime", "Videojuegos", "Cómics", "K-pop"...'
                 value={fields.categoria} onChange={handleChange} />
             </div>
 
@@ -92,8 +92,12 @@ export default function ColeccionCrear() {
 
             <div className="form-group">
               <label htmlFor="archivo">Imagen de portada</label>
+              <div className="img-preview-wrap">
+                <img src={previewSrc} alt="Vista previa de la portada"
+                  className="img-preview img-preview--collection" />
+              </div>
               <input type="file" id="archivo" name="archivo" className="form-input"
-                accept="image/*" ref={fileRef} />
+                accept="image/*" ref={fileRef} onChange={handleFileChange} />
               <small className="form-help">JPG, PNG o GIF. Máximo 15MB.</small>
             </div>
 
