@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { fetchAPI, getApiErrorMessage } from "../../data/apiClient";
+import { listarUsuarios } from "../../data/usuariosApi";
+import { getApiErrorMessage } from "../../data/apiClient";
 import EstadoPagina from "../../components/ui/EstadoPagina";
 import type { UsuarioOut } from "../../types/usuario";
 import { resolveImgUrl } from "../../utils/imagenes";
 import defaultImg from "../../assets/default-collection.jpg";
 
 type OrdenCol = "nombre" | "rol" | "fechaRegistro";
-
 
 export default function AdminDashboard() {
   const [usuarios, setUsuarios] = useState<UsuarioOut[]>([]);
@@ -19,8 +19,8 @@ export default function AdminDashboard() {
   function cargar() {
     setLoading(true);
     setError(null);
-    fetchAPI<UsuarioOut[]>("/usuarios")
-      .then(setUsuarios)
+    listarUsuarios()
+      .then((data) => setUsuarios(data as UsuarioOut[]))
       .catch((err) => setError(getApiErrorMessage(err)))
       .finally(() => setLoading(false));
   }
@@ -40,7 +40,7 @@ export default function AdminDashboard() {
       const valorA = ordenPor === "nombre" ? a.nombre : ordenPor === "rol" ? (a.rol ?? "") : (a.fechaRegistro ?? "");
       const valorB = ordenPor === "nombre" ? b.nombre : ordenPor === "rol" ? (b.rol ?? "") : (b.fechaRegistro ?? "");
       return valorA.localeCompare(valorB);
-    })
+    });
 
   const STATS = [
     { label: "Total", count: usuarios.length },
@@ -79,11 +79,22 @@ export default function AdminDashboard() {
 
       <div className="mc-controls">
         <div className="mc-search-wrap">
-          <input type="search" placeholder="Buscar por nombre o ID..." value={busqueda} onChange={(e) => setBusqueda(e.target.value)} />
-          <i className="fas fa-search" />
+          <input
+            type="search"
+            placeholder="Buscar por nombre o ID..."
+            value={busqueda}
+            onChange={(e) => setBusqueda(e.target.value)}
+            aria-label="Buscar usuario"
+          />
+          <i className="fas fa-search" aria-hidden="true" />
         </div>
 
-        <select className="mc-sort" value={ordenPor} onChange={(e) => setOrdenPor(e.target.value as OrdenCol)}>
+        <select
+          className="mc-sort"
+          value={ordenPor}
+          onChange={(e) => setOrdenPor(e.target.value as OrdenCol)}
+          aria-label="Ordenar por"
+        >
           <option value="nombre">Nombre A→Z</option>
           <option value="rol">Rol</option>
           <option value="fechaRegistro">Más recientes</option>
@@ -101,7 +112,7 @@ export default function AdminDashboard() {
           <table className="db-tabla">
             <thead>
               <tr>
-                <th></th>
+                <th aria-label="Avatar"></th>
                 <th>ID</th>
                 <th>Nombre</th>
                 <th>Rol</th>
@@ -114,7 +125,7 @@ export default function AdminDashboard() {
                   <td>
                     <img
                       src={resolveImgUrl(u.urlAvatar) || defaultImg}
-                      alt={u.nombre}
+                      alt={`Avatar de ${u.nombre}`}
                       className="db-thumb"
                     />
                   </td>

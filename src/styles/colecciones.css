@@ -326,7 +326,19 @@
   gap: 0.5rem;
 }
  
-.mis-items-controles .form-group {
+.mis-items-toggle input {
+  accent-color: var(--color-primary);
+  width: 16px;
+  height: 16px;
+}
+ 
+.mis-items-toggle-label {
+  font-size: 0.875rem;
+  color: var(--color-text);
+  white-space: nowrap;
+}
+ 
+.mis-items-select-group {
   margin-bottom: 0;
 }
  
@@ -346,10 +358,6 @@
 }
 
 @media (max-width: 768px) {
-  .coleccion-detalle-page {
-    display: flex;
-    flex-direction: column;
-  }
 
   .coleccion-detalle-img-wrap {
     order: -1;

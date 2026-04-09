@@ -1,21 +1,18 @@
 import { useEffect, useState } from "react";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { getColeccionById, borrarColeccion, eliminarUsuarioColeccion, getUsuarioColeccionPorUsuarioYColeccion, patchFavorita } from "../../data/coleccionesApi";
 import { getItemsPorColeccion, getMisUsuarioItems, borrarItem } from "../../data/itemsApi";
 import type { Coleccion, Relacion } from "../../types/coleccion";
 import type { Item, UsuarioItemOut } from "../../types/item";
 import { useAuth } from "../../auth/AuthContext";
-import { resolveImgUrl } from "../../utils/imagenes";
 import PanelAdmin from "../../components/ui/PanelAdmin";
 import Aviso from "../../components/ui/Aviso";
 import Breadcrumbs from "../../components/ui/Breadcrumbs";
 import EstadoPagina from "../../components/ui/EstadoPagina";
 import ItemCard from "../../components/domain/ItemCard";
-import ColeccionDetalleImagen from "../../components/domain/ColeccionDetalleImagen";
-import ColeccionDetalleInfo from "../../components/domain/ColeccionDetalleInfo";
+import ColeccionDetallePanel from "../../components/domain/ColeccionDetallePanel";
 import ModalConfirm from "../../components/ui/ModalConfirm";
-import defaultImg from "../../assets/default-collection.jpg";
 
 type Modal = { tipo: "coleccion" | "perfil" | "item"; id?: number } | null;
 
@@ -45,10 +42,9 @@ export default function MisColeccionesDetalle() {
       setLoading(false);
       return;
     }
-
     if (!user?.id) return;
     const userId = user.id;
-    
+
     async function cargar() {
       try {
         const col = await getColeccionById(idColeccion) as Coleccion;
@@ -142,14 +138,12 @@ export default function MisColeccionesDetalle() {
 
   // Datos derivados de la colección y permisos
   const creadorId = coleccion.idCreador ?? null;
-  const creadorNombre = coleccion.nombreCreador ?? "Desconocido";
   const esCreador = creadorId === user?.id;
   const esAdmin = user?.rol === "ADMIN";
   const esMod = user?.rol === "MODS";
   const puedeEditar = esCreador || esAdmin || (esMod && (coleccion.esPublica ?? false));
   const idUC = relacion?.id ?? null;
   const esFavorita = relacion?.esFavorita ?? false;
-  const imgSrc = resolveImgUrl(coleccion.imagenPortada) || defaultImg;
   // Filtrado de items visibles según configuración del usuario
   const itemsVisibles = items.filter((item) => {
     const ui = misItems.find((u) => u.idItem === item.id);
@@ -165,64 +159,25 @@ export default function MisColeccionesDetalle() {
       ]} />
 
       <div className="coleccion-detalle-page">
-
-        <ColeccionDetalleImagen
-          imgSrc={imgSrc}
-          nombre={coleccion.nombre}
-          esPlantilla={coleccion.usableComoPlantilla ?? false}
+        <ColeccionDetallePanel
+          coleccion={coleccion}
+          logueado={true}
+          esPropio={esCreador}
+          favorita={esFavorita}
+          onTogFavorita={idUC ? handleTogFavorita : undefined}
+          togFav={togFav}
+          misItemsUrl={idUC ? `/mis-colecciones/${idColeccion}/items/editar` : undefined}
         />
-
-        <div className="coleccion-detalle-info">
-
-          <div className="coleccion-detalle-header">
-            <h2 className="coleccion-detalle-nombre">{coleccion.nombre}</h2>
-
-            {idUC && (
-              <button
-                className="btn btn-outline btn-fav-icon"
-                onClick={handleTogFavorita}
-                disabled={togFav}
-              >
-                <i className={`fa-star ${esFavorita ? "fas star-activa" : "far star-inactiva"}`} />
-              </button>
-            )}
-          </div>
-
-          <ColeccionDetalleInfo
-            categoria={coleccion.categoria}
-            creadorId={creadorId}
-            creadorNombre={creadorNombre}
-            esPublica={coleccion.esPublica ?? false}
-            descripcion={coleccion.descripcion || ""}
-            logueado={true}
-            esPropio={esCreador}
-          />
-
-          {idUC && (
-            <div className="coleccion-detalle-card">
-              <h3 className="coleccion-detalle-card-title">
-                <i className="fas fa-layer-group" /> Mis items
-              </h3>
-              <Link
-                to={`/mis-colecciones/${idColeccion}/items/editar`}
-                className="btn btn-primary"
-              >
-                <i className="fas fa-sliders-h" /> Ajustar visibilidad y estado
-              </Link>
-            </div>
-          )}
-        </div>
 
         {idUC && (
           <div className="coleccion-detalle-card coleccion-detalle-card--admin">
             <h3 className="coleccion-detalle-card-title">
               <i className="fas fa-cog" /> Gestión de la colección
             </h3>
-
             {esCreador ? (
               <PanelAdmin
                 editarUrl={`/colecciones/${idColeccion}/editar`}
-                añadirItemUrl={`/colecciones/${idColeccion}/items/crear`}
+                añadirItemUrl={`/colecciones/${idColeccion}/items/crear?coleccion=${encodeURIComponent(coleccion.nombre)}`}
                 onBorrar={handleEliminarColeccion}
               />
             ) : (
@@ -239,7 +194,6 @@ export default function MisColeccionesDetalle() {
             )}
           </div>
         )}
-
       </div>
 
       <section className="section bg-light">
@@ -261,7 +215,7 @@ export default function MisColeccionesDetalle() {
                 usuarioItem={misItems.find((u) => u.idItem === item.id) || null}
                 puedeEditar={puedeEditar}
                 idColeccion={idColeccion}
-                returnUrl={`/mis-colecciones/${idColeccion}`}
+                volverUrl={`/mis-colecciones/${idColeccion}`}
                 onEliminar={puedeEditar ? handleEliminarItem : null}
               />
             ))}

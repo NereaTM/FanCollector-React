@@ -1,9 +1,10 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import { getUsuarioById, editarUsuario, eliminarUsuario } from "../../data/usuariosApi";
 import { getApiErrorMessage } from "../../data/apiClient";
 import { useAuth } from "../../auth/AuthContext";
+import { useImagenPreview } from "../../hooks/useImagenPreview";
 import { resolveImgUrl } from "../../utils/imagenes";
 import { formatDate } from "../../utils/date";
 import defaultAvatar from "../../assets/iconoUser.png";
@@ -16,6 +17,7 @@ export default function PerfilEditar() {
   const navigate = useNavigate();
   const { userId } = useParams();
   const { user, logout } = useAuth();
+  const { previewSrc, fileRef, handleFileChange, setImagenServidor } = useImagenPreview(defaultAvatar);
 
   const myId = user?.id ?? null;
   const targetId = userId ? Number(userId) : myId;
@@ -26,14 +28,11 @@ export default function PerfilEditar() {
 
   const [usuario, setUsuario] = useState<AuthUser | null>(null);
   const [fields, setFields] = useState({ nombre: "", email: "", descripcion: "", contactoPublico: "", rol: "" });
-  const [previewSrc, setPreviewSrc] = useState(defaultAvatar);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [modalGuardar, setModalGuardar] = useState(false);
   const [modalEliminar, setModalEliminar] = useState(false);
-
-  const fileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!targetId) return;
@@ -48,7 +47,7 @@ export default function PerfilEditar() {
           contactoPublico: perfil?.contactoPublico ?? "",
           rol: perfil?.rol ?? "",
         });
-        setPreviewSrc(resolveImgUrl(perfil?.urlAvatar) || defaultAvatar);
+        setImagenServidor(resolveImgUrl(perfil?.urlAvatar) || defaultAvatar);
       })
       .catch((err: Error) => setError(err?.message || "Error al cargar el perfil"))
       .finally(() => setLoading(false));
@@ -57,37 +56,32 @@ export default function PerfilEditar() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
     setFields((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) setPreviewSrc(URL.createObjectURL(file));
-  };
-
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setModalGuardar(true);
   }
- 
-  async function confirmarGuardar() {
-      if (!targetId) return;
-      const formData = new FormData();
-      formData.append("nombre", fields.nombre.trim());
-      formData.append("email", fields.email.trim());
-      formData.append("descripcion", fields.descripcion.trim());
-      formData.append("contactoPublico", fields.contactoPublico.trim());
-      const archivo = fileRef.current?.files?.[0];
-      if (archivo) formData.append("archivo", archivo);
 
-      setSaving(true);
-      setModalGuardar(false);
-      try {
-        await editarUsuario(targetId, formData);
-        toast.success("Perfil actualizado correctamente");
-        navigate(volverUrl);
-      } catch (err) {
-        toast.error(getApiErrorMessage(err));
-        setSaving(false);
-      }
+  async function confirmarGuardar() {
+    if (!targetId) return;
+    const formData = new FormData();
+    formData.append("nombre", fields.nombre.trim());
+    formData.append("email", fields.email.trim());
+    formData.append("descripcion", fields.descripcion.trim());
+    formData.append("contactoPublico", fields.contactoPublico.trim());
+    const archivo = fileRef.current?.files?.[0];
+    if (archivo) formData.append("archivo", archivo);
+
+    setSaving(true);
+    setModalGuardar(false);
+    try {
+      await editarUsuario(targetId, formData);
+      toast.success("Perfil actualizado correctamente");
+      navigate(volverUrl);
+    } catch (err) {
+      toast.error(getApiErrorMessage(err));
+      setSaving(false);
     }
+  }
 
   async function handleEliminarCuenta() {
     const idAEliminar = esAjeno ? targetId : myId;

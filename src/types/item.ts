@@ -13,12 +13,6 @@ export type Item = {
   anioLanzamiento: number | null;
 };
 
-export type UsuarioItem = {
-  estado: EstadoItem | null;
-  cantidad: number | null;
-  notas: string | null;
-};
-
 export type UsuarioItemOut = {
   id: number;
   idUsuario: number;
@@ -43,40 +37,6 @@ export type UsuarioItemDetalleDTO = UsuarioItemOut & {
   anioLanzamiento: number | null;
 };
 
-export type ItemInDTO = {
-  idColeccion: number;
-  nombre: string;
-  descripcion?: string;
-  tipo: string;
-  rareza: Rareza;
-  anioLanzamiento?: number;
-};
-
-export type ItemPutDTO = {
-  nombre: string;
-  descripcion?: string;
-  tipo: string;
-  rareza: Rareza;
-  anioLanzamiento?: number;
-};
-
-export type UsuarioItemInDTO = {
-  idUsuario: number;
-  idItem: number;
-  idColeccion: number;
-  estado?: EstadoItem;
-  esVisible?: boolean;
-  notas?: string;
-  cantidad?: number;
-};
-
-export type UsuarioItemPutDTO = {
-  estado?: EstadoItem;
-  esVisible?: boolean;
-  notas?: string;
-  cantidad?: number;
-};
-
 export type ItemForm = {
   nombre: string;
   tipo: string;
@@ -94,4 +54,13 @@ export type FilaItem = {
   notas: string;
   saving: boolean;
   guardado: boolean;
+};
+
+export type ItemCardProps = {
+  item: Item;
+  usuarioItem?: UsuarioItemOut | null;
+  puedeEditar?: boolean;
+  idColeccion?: number | null;
+  volverUrl?: string | null;
+  onEliminar?: ((id: number) => void) | null;
 };

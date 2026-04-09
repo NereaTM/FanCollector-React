@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useEffect, useCallback } from "react";
 import type { ReactNode } from "react";
 import type { AuthUser, RegisterRequest } from "../types/auth";
-import { loginRequest, registerRequest } from "./authApi";
+import { loginRequest, registerRequest } from "../data/authApi";
 import { getToken, saveToken, getUserId, saveUserId, clearSession } from "./authStorage";
 import { fetchAPI } from "../data/apiClient";
 

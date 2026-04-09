@@ -10,36 +10,18 @@ export type UsuarioOut = {
   fechaRegistro: string | null;
 };
 
-export type UsuarioAdminOut = UsuarioOut & {
-  email: string;
-};
-
-export type UsuarioInDTO = {
+export type PerfilVistaProps = {
   nombre: string;
-  email: string;
-  contrasena: string;
-  urlAvatar?: string;
-  descripcion?: string;
-  contactoPublico?: string;
-};
-
-export type UsuarioPutDTO = {
-  nombre: string;
-  email: string;
-  urlAvatar?: string;
-  descripcion?: string;
-  contactoPublico?: string;
-};
-
-export type UsuarioPasswordDTO = {
-  contrasena: string;
-};
-
-export type UsuarioRolDTO = {
   rol: RolUsuario;
-};
-
-export type LoginDTO = {
-  email: string;
-  contrasena: string;
+  fechaRegistro?: string;
+  avatarSrc: string;
+  email?: string;
+  descripcion?: string;
+  contactoPublico?: string;
+  // Botones de cuenta
+  esPropio?: boolean;
+  puedeEditar?: boolean;
+  editarUrl: string;
+  cambiarPasswordUrl: string;
+  onCerrarSesion?: () => void;
 };

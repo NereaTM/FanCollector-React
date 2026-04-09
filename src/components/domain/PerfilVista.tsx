@@ -1,23 +1,7 @@
 import { Link } from "react-router-dom";
 import { formatDate } from "../../utils/date";
 import { getRolBadgeClass, getRolIcon } from "../../utils/roles";
-import type { RolUsuario } from "../../types/usuario";
-
-type Props = {
-  nombre: string;
-  rol: RolUsuario;
-  fechaRegistro?: string;
-  avatarSrc: string;
-  email?: string;
-  descripcion?: string;
-  contactoPublico?: string;
-  // Botones de cuenta
-  esPropio?: boolean;
-  puedeEditar?: boolean;
-  editarUrl: string;
-  cambiarPasswordUrl: string;
-  onCerrarSesion?: () => void;
-};
+import type { PerfilVistaProps } from "../../types/usuario";
 
 
 export default function PerfilVista({
@@ -25,7 +9,7 @@ export default function PerfilVista({
   email, descripcion, contactoPublico,
   esPropio = false, puedeEditar = false,
   editarUrl, cambiarPasswordUrl, onCerrarSesion,
-}: Props) {
+}: PerfilVistaProps) {
   const mostrarCuenta = esPropio || puedeEditar;
 
   return (

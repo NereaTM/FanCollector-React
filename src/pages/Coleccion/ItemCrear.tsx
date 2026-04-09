@@ -1,12 +1,14 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import toast from "react-hot-toast";
 import { crearItem } from "../../data/itemsApi";
 import { getApiErrorMessage } from "../../data/apiClient";
 import { useAuth } from "../../auth/AuthContext";
+import { useImagenPreview } from "../../hooks/useImagenPreview";
 import Breadcrumbs from "../../components/ui/Breadcrumbs";
 import ModalConfirm from "../../components/ui/ModalConfirm";
 import type { ItemForm } from "../../types/item";
+import defaultImg from "../../assets/default-collection.jpg";
 
 const RAREZAS = ["COMUN", "RARO", "EPICO", "LEGENDARIO"] as const;
 
@@ -15,9 +17,12 @@ export default function ItemCrear() {
   const { search } = useLocation();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { previewSrc, fileRef, handleFileChange } = useImagenPreview(defaultImg);
 
   const idColeccion = Number(coleccionId);
-  const returnUrl = new URLSearchParams(search).get("from") ?? `/mis-colecciones/${idColeccion}`;
+  const params = new URLSearchParams(search);
+  const volverUrl = params.get("from") ?? `/mis-colecciones/${idColeccion}`;
+  const nombreColeccion = params.get("coleccion") ?? "Colección";
 
   const [fields, setFields] = useState<ItemForm>({
     nombre: "",
@@ -28,7 +33,6 @@ export default function ItemCrear() {
   });
   const [saving, setSaving] = useState(false);
   const [modalCancelar, setModalCancelar] = useState(false);
-  const fileRef = useRef<HTMLInputElement>(null);
 
   if (!user) return null;
 
@@ -38,8 +42,6 @@ export default function ItemCrear() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!fields.nombre.trim()) { toast.error("El nombre es obligatorio"); return; }
-    if (!fields.tipo.trim()) { toast.error("El tipo es obligatorio"); return; }
 
     const formData = new FormData();
     formData.append("idColeccion", String(idColeccion));
@@ -47,12 +49,10 @@ export default function ItemCrear() {
     formData.append("tipo", fields.tipo.trim());
     formData.append("rareza", fields.rareza);
     formData.append("descripcion", fields.descripcion.trim());
-
     const anio = Number(fields.anioLanzamiento);
     if (fields.anioLanzamiento && Number.isFinite(anio)) {
       formData.append("anioLanzamiento", String(anio));
     }
-
     const archivo = fileRef.current?.files?.[0];
     if (archivo) formData.append("archivo", archivo);
 
@@ -60,7 +60,7 @@ export default function ItemCrear() {
     try {
       await crearItem(formData);
       toast.success("Item creado correctamente");
-      navigate(returnUrl);
+      navigate(volverUrl);
     } catch (err) {
       toast.error(getApiErrorMessage(err));
       setSaving(false);
@@ -72,7 +72,7 @@ export default function ItemCrear() {
       <Breadcrumbs items={[
         { label: "Inicio", to: "/" },
         { label: "Mis Colecciones", to: "/mis-colecciones" },
-        { label: "Colección", to: returnUrl },
+        { label: nombreColeccion, to: volverUrl },
         { label: "Nuevo item" },
       ]} />
 
@@ -86,30 +86,21 @@ export default function ItemCrear() {
 
             <div className="form-group">
               <label htmlFor="nombre">Nombre <span className="required">*</span></label>
-              <input
-                type="text" id="nombre" name="nombre"
-                className="form-input" required
-                value={fields.nombre} onChange={handleChange}
-              />
+              <input type="text" id="nombre" name="nombre" className="form-input" required
+                value={fields.nombre} onChange={handleChange} />
             </div>
 
             <div className="form-row">
               <div className="form-group form-group--half">
                 <label htmlFor="tipo">Tipo <span className="required">*</span></label>
-                <input
-                  type="text" id="tipo" name="tipo"
-                  className="form-input" required
+                <input type="text" id="tipo" name="tipo" className="form-input" required
                   placeholder='Ej.: "Carta", "Figura"'
-                  value={fields.tipo} onChange={handleChange}
-                />
+                  value={fields.tipo} onChange={handleChange} />
               </div>
               <div className="form-group form-group--half">
                 <label htmlFor="rareza">Rareza</label>
-                <select
-                  id="rareza" name="rareza"
-                  className="form-input"
-                  value={fields.rareza} onChange={handleChange}
-                >
+                <select id="rareza" name="rareza" className="form-input"
+                  value={fields.rareza} onChange={handleChange}>
                   {RAREZAS.map((r) => <option key={r} value={r}>{r}</option>)}
                 </select>
               </div>
@@ -117,30 +108,26 @@ export default function ItemCrear() {
 
             <div className="form-group">
               <label htmlFor="anioLanzamiento">Año de lanzamiento</label>
-              <input
-                type="number" id="anioLanzamiento" name="anioLanzamiento"
+              <input type="number" id="anioLanzamiento" name="anioLanzamiento"
                 className="form-input" min={0}
-                value={fields.anioLanzamiento} onChange={handleChange}
-              />
+                value={fields.anioLanzamiento} onChange={handleChange} />
             </div>
 
             <div className="form-group">
               <label htmlFor="archivo">Imagen</label>
-              <input
-                type="file" id="archivo" name="archivo"
-                className="form-input" accept="image/*"
-                ref={fileRef}
-              />
+              <div className="img-preview-wrap">
+                <img src={previewSrc} alt="Vista previa del item"
+                  className="img-preview img-preview--item" />
+              </div>
+              <input type="file" id="archivo" name="archivo" className="form-input"
+                accept="image/*" ref={fileRef} onChange={handleFileChange} />
               <small className="form-help">JPG, PNG o GIF. Máximo 15MB.</small>
             </div>
 
             <div className="form-group">
               <label htmlFor="descripcion">Descripción</label>
-              <textarea
-                id="descripcion" name="descripcion"
-                className="form-textarea" rows={4}
-                value={fields.descripcion} onChange={handleChange}
-              />
+              <textarea id="descripcion" name="descripcion" className="form-textarea" rows={4}
+                value={fields.descripcion} onChange={handleChange} />
             </div>
 
             <div className="form-actions">
@@ -165,7 +152,7 @@ export default function ItemCrear() {
         titulo="¿Cancelar la creación?"
         mensaje="Se perderán los datos introducidos."
         labelConfirmar="Sí, cancelar"
-        onConfirmar={() => navigate(returnUrl)}
+        onConfirmar={() => navigate(volverUrl)}
         onCancelar={() => setModalCancelar(false)}
       />
     </>

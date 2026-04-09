@@ -11,50 +11,6 @@ export type Coleccion = {
   usableComoPlantilla: boolean;
 };
 
-export type ColeccionConRol = {
-  coleccion: Coleccion;
-  esCreador: boolean;
-};
-
-export type UsuarioColeccion = {
-  id: number;
-  idUsuario: number;
-  idColeccion: number;
-  esFavorita: boolean;
-  esCreador: boolean;
-  esVisible: boolean;
-  fechaAgregada: string;
-};
-
-export type ColeccionInDTO = {
-  idCreador: number;
-  nombre: string;
-  descripcion?: string;
-  categoria: string;
-  imagenPortada?: string;
-  esPublica?: boolean;
-  usableComoPlantilla?: boolean;
-};
-
-export type ColeccionPutDTO = {
-  nombre: string;
-  descripcion?: string;
-  categoria: string;
-  imagenPortada?: string;
-  esPublica?: boolean;
-  usableComoPlantilla?: boolean;
-};
-
-export type ColeccionConRelacion = {
-  uc: UsuarioColeccion;
-  coleccion: Coleccion;
-};
-
-export type Relacion = {
-  id: number;
-  esFavorita: boolean;
-} | null;
-
 export type UsuarioColeccionDetalle = {
   id: number;
   idUsuario: number;
@@ -67,10 +23,49 @@ export type UsuarioColeccionDetalle = {
   nombreUsuario: string;
 };
 
+export type Relacion = {
+  id: number;
+  esFavorita: boolean;
+} | null;
+
 export type ColeccionForm = {
   nombre: string;
   descripcion: string;
   categoria: string;
   esPublica: boolean;
   usableComoPlantilla: boolean;
+};
+
+export type ColeccionPutDTO = {
+  nombre: string;
+  descripcion?: string;
+  categoria: string;
+  imagenPortada?: string;
+  esPublica?: boolean;
+  usableComoPlantilla?: boolean;
+};
+
+export type ColeccionCardProps = {
+  coleccion: Coleccion;
+  // MisColecciones
+  esFavorita?: boolean;
+  esCreador?: boolean;
+  fechaAgregada?: string;
+  // mis-colecciones vs colecciones
+  urlBase?: string;
+};
+
+export type ColeccionDetallePanelProps = {
+  coleccion: Coleccion;
+  logueado?: boolean;
+  esPropio?: boolean;
+  // relación usuario-colección
+  favorita?: boolean;
+  onTogFavorita?: () => void;
+  togFav?: boolean;
+  misItemsUrl?: string;
+  // acción de unirse a plantilla
+  yaUnido?: boolean;
+  uniendose?: boolean;
+  onUnirse?: () => void;
 };
