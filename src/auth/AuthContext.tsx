@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import type { AuthUser, RegisterRequest } from "../types/auth";
 import { loginRequest, registerRequest } from "../data/authApi";
 import { getToken, saveToken, getUserId, saveUserId, clearSession } from "./authStorage";
-import { fetchAPI } from "../data/apiClient";
+import { getUsuarioById } from "../data/usuariosApi";
 
 type AuthContextType = {
   user: AuthUser | null;
@@ -44,7 +44,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const savedId = getUserId();
     if (!savedToken || !savedId) { setLoadingSession(false); return; }
 
-    fetchAPI<AuthUser>(`/usuarios/${savedId}`)
+     getUsuarioById(savedId)
       .then((me) => { setUser(me); setToken(savedToken); })
       .catch(() => logout())
       .finally(() => setLoadingSession(false));
@@ -55,8 +55,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     saveToken(data.token);
     saveUserId(data.id);
     setToken(data.token);
-    // Usamos los datos del login para no hacer otra petición
-    const me = await fetchAPI<AuthUser>(`/usuarios/${data.id}`);
+    const me = await getUsuarioById(data.id);
     setUser(me);
   }, []);
 
