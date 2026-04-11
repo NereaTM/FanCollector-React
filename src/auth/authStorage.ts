@@ -16,14 +16,6 @@ export function clearSession(): void {
   localStorage.removeItem(USER_ID_KEY);
 }
 
-// User ID
-export function getUserId(): string | null {
-  return localStorage.getItem(USER_ID_KEY);
-}
-
-export function saveUserId(id: number | string): void {
-  localStorage.setItem(USER_ID_KEY, String(id));
-}
 
 // Extrae el id que viene dentro del JWT sin necesidad de llamar a la API
 export function getIdFromToken(): string | null {
