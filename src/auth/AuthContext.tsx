@@ -2,24 +2,26 @@ import { createContext, useContext, useState, useEffect, useCallback } from "rea
 import type { ReactNode } from "react";
 import type { AuthUser, RegisterRequest } from "../types/auth";
 import { loginRequest, registerRequest } from "../data/authApi";
-import { getToken, saveToken, getUserId, saveUserId, clearSession } from "./authStorage";
+import { getToken, saveToken, clearSession, getIdFromToken } from "./authStorage";
 import { getUsuarioById } from "../data/usuariosApi";
 
 type AuthContextType = {
   user: AuthUser | null;
   token: string | null;
   loadingSession: boolean;
+  sessionChecked: boolean;
   login: (email: string, contrasena: string) => Promise<void>;
   register: (dto: RegisterRequest) => Promise<void>;
   logout: () => void;
 };
 
 export const AuthContext = createContext<AuthContextType>({
-  user: null, 
-  token: null, 
+  user: null,
+  token: null,
   loadingSession: true,
-  login: async () => {}, 
-  register: async () => {}, 
+  sessionChecked: false,
+  login: async () => {},
+  register: async () => {},
   logout: () => {},
 });
 
@@ -31,6 +33,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [token, setToken] = useState<string | null>(getToken());
   const [loadingSession, setLoadingSession] = useState(true);
+  // si no hay token válido ya sabemos la respuesta sin hacer nada más
+  const [sessionChecked, setSessionChecked] = useState(() => {
+    return !getToken() || !getIdFromToken();
+  });
 
   const logout = useCallback(() => {
     clearSession();
@@ -38,14 +44,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
   }, []);
 
-  // Al iniciar la app, recuperamos el usuario si hay sesión
   useEffect(() => {
     const savedToken = getToken();
-    const savedId = getUserId();
-    if (!savedToken || !savedId) { setLoadingSession(false); return; }
+    const tokenId = getIdFromToken();
 
-     getUsuarioById(savedId)
-      .then((me) => { setUser(me); setToken(savedToken); })
+    if (!savedToken || !tokenId) {
+      clearSession();
+      setLoadingSession(false);
+      setSessionChecked(true);
+      return;
+    }
+
+    // Hay sesión válidaRequireAuth deja pasar y los datos llegan más tarde
+
+    setSessionChecked(true);
+
+    getUsuarioById(tokenId)
+      .then((me) => setUser(me))
       .catch(() => logout())
       .finally(() => setLoadingSession(false));
   }, [logout]);
@@ -53,9 +68,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = useCallback(async (email: string, contrasena: string) => {
     const data = await loginRequest(email, contrasena);
     saveToken(data.token);
-    saveUserId(data.id);
-    setToken(data.token);
     const me = await getUsuarioById(data.id);
+    setToken(data.token);
     setUser(me);
   }, []);
 
@@ -65,7 +79,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [login]);
 
   return (
-    <AuthContext.Provider value={{ user, token, loadingSession, login, register, logout }}>
+    <AuthContext.Provider value={{ user, token, loadingSession, sessionChecked, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );
