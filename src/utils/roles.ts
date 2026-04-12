@@ -8,6 +8,6 @@ export function getRolBadgeClass(rol: string | undefined) {
 export function getRolIcon(rol: string | undefined) {
   const r = (rol || "").toUpperCase();
   if (r === "ADMIN") return "fa-shield-alt";
-  if (r === "MODS" || r === "MOD") return "fa-star";
+  if (r === "MODS") return "fa-star";
   return "fa-user";
 }
