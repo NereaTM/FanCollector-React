@@ -6,7 +6,7 @@ import headerImg from "../assets/headerColecciones.png";
 import exploraImg  from "../assets/explora.png";
 import creaImg from "../assets/creaygestiona.jpg";
 import comparteImg from "../assets/comparte.png";
-import crearCta from "../assets/CrearCuenta.png";
+import crearCta from "../assets/crearcuenta.png";
 import { enviarContacto } from "../data/emailService";
 
 const FAQ_ITEMS = [
