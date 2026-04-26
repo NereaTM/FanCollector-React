@@ -1,0 +1,182 @@
+.icard {
+  background: var(--color-white);
+  border-radius: var(--border-radius-md);
+  border: 1px solid rgba(10, 35, 66, 0.1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.icard:hover {
+  border-color: rgba(10, 35, 66, 0.22);
+  transform: translateY(-2px);
+}
+
+/* Cabecera */
+
+.icard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.45rem 0.75rem;
+  border-bottom: 1px solid rgba(10, 35, 66, 0.08);
+  min-height: 34px;
+  gap: 6px;
+}
+
+.icard-badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 20px;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.badge-estado-none     { background: #F2F2F2;  color: #666; }
+.badge-estado-BUSCO    { background: #D3D1C7;  color: #444441; }
+.badge-estado-TENGO    { background: #C0DD97;  color: #27500A; }
+.badge-estado-EN_CAMINO{ background: #FAC775;  color: #633806; }
+.badge-estado-DROPEO   { background: #F7C1C1;  color: #791F1F; }
+
+.badge-rareza-COMUN      { background: #D3D1C7; color: #444441; }
+.badge-rareza-RARO       { background: #B5D4F4; color: #0C447C; }
+.badge-rareza-EPICO      { background: #CECBF6; color: #3C3489; }
+.badge-rareza-LEGENDARIO { background: #FAC775; color: #633806; }
+
+/* Imagen */
+
+.icard-img-wrap {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--color-background);
+}
+
+.icard-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.icard:hover .icard-img {
+  transform: scale(1.04);
+}
+
+/* CONTENEDOR ACCIONES */
+.icard-actions {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  gap: 6px;
+  opacity: 0;
+  transform: translateY(-6px);
+  pointer-events: none;
+  transition: all 0.2s ease;
+}
+
+.icard:hover .icard-actions {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.icard-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: var(--color-white);
+}
+
+.icard-btn-edit {
+  background: var(--color-warning);
+}
+
+.icard-btn-edit:hover {
+  background: #e08c00;
+  transform: scale(1.1);
+  color: var(--color-white);
+}
+
+.icard-btn-del {
+  background: var(--color-error);
+}
+
+.icard-btn-del:hover {
+  background: #c62828;
+  transform: scale(1.1);
+}
+/* Cuerpo */
+
+.icard-body {
+  padding: 0.75rem 0.9rem 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.icard-tipo {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--color-text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.icard-nombre {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.icard-desc {
+  font-size: 0.78rem;
+  color: var(--color-text-light);
+  margin: 2px 0 0;
+  overflow: hidden;
+  max-height: 2.8em;
+  line-height: 1.4;
+}
+
+.icard-meta {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-top: 5px;
+}
+
+.icard-meta-item {
+  font-size: 0.75rem;
+  color: var(--color-text-light);
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.icard-notas {
+  font-size: 0.75rem;
+  margin-top: 8px;
+  padding: 5px 8px;
+  background: #fef9c3;
+  border-left: 3px solid var(--color-warning);
+  border-radius: 0 4px 4px 0;
+  color: var(--color-text);
+  overflow: hidden;
+  max-height: 2.8em;
+  line-height: 1.4;
+}

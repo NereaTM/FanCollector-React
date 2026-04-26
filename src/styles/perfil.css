@@ -1,0 +1,280 @@
+.perfil-page {
+  max-width: 860px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.perfil-banner {
+  background: linear-gradient(135deg, var(--color-primary) 0%, #1a4a7a 100%);
+  border-radius: var(--border-radius-lg);
+  padding: 2.5rem 2rem;
+  color: var(--color-white);
+  margin-bottom: 1.5rem;
+  box-shadow: 0 8px 32px rgba(10, 35, 66, 0.2);
+}
+
+.perfil-banner-inner {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.perfil-avatar-wrap {
+  flex-shrink: 0;
+}
+
+.perfil-avatar-xl {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.perfil-nombre {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+  color: var(--color-white);
+}
+
+.perfil-banner .perfil-meta {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.perfil-banner .perfil-fecha {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.88rem;
+}
+
+.perfil-banner .perfil-rol {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: var(--color-white);
+}
+
+.perfil-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.perfil-card {
+  background: var(--color-white);
+  color: var(--color-white);
+  border-radius: var(--border-radius-md);
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(10, 35, 66, 0.08);
+}
+
+.perfil-card-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin: 0 0 1.25rem 0;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--color-background);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.perfil-info-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.perfil-info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.perfil-info-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-light);
+}
+
+.perfil-info-value {
+  font-size: 0.95rem;
+  color: var(--color-text);
+}
+
+.perfil-acciones {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.perfil-muted {
+  color: var(--color-text-light);
+  font-style: italic;
+}
+
+/* Rol badge */
+.perfil-rol {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.8rem;
+  border: 1px solid transparent;
+}
+
+/* Avatar editor  */
+
+.perfil-avatar {
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--color-border, #ddd);
+  background: var(--color-background);
+}
+
+.perfil-avatar-lg {
+  width: 84px;
+  height: 84px;
+  flex: 0 0 auto;
+}
+
+.perfil-avatar-preview {
+  width: 96px;
+  height: 96px;
+  margin-bottom: 0.75rem;
+}
+
+.avatar-upload-section {
+  padding: 1rem;
+  border-radius: var(--border-radius-md, 16px);
+  background: var(--color-background);
+}
+
+/* Zona de peligro */
+
+.perfil-card--danger {
+  border: 1px solid rgba(229, 57, 53, 0.25);
+}
+
+.perfil-card-title--danger {
+  color: var(--color-error);
+  border-bottom-color: rgba(229, 57, 53, 0.15);
+}
+
+.perfil-danger-desc {
+  font-size: 0.9rem;
+  color: var(--color-text-light);
+  margin-bottom: 1rem;
+}
+
+/* Dashboards admin / mod */
+ 
+.db-tabla-wrapper {
+  overflow-x: auto;
+  padding: 1.5rem 2rem;
+}
+ 
+.db-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+ 
+.db-tabla thead th {
+  text-align: left;
+  padding: 0.6rem 0.85rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-light);
+  border-bottom: 2px solid rgba(10, 35, 66, 0.1);
+  white-space: nowrap;
+}
+ 
+.db-tabla tbody tr {
+  border-bottom: 1px solid rgba(10, 35, 66, 0.06);
+}
+ 
+.db-tabla tbody tr:hover {
+  background: var(--color-background);
+}
+ 
+.db-tabla td {
+  padding: 0.65rem 0.85rem;
+  vertical-align: middle;
+}
+ 
+.th-ord {
+  cursor: pointer;
+  user-select: none;
+}
+ 
+.th-ord:hover {
+  color: var(--color-primary);
+}
+ 
+.td-id {
+  color: var(--color-text-light);
+  font-size: 0.78rem;
+  font-variant-numeric: tabular-nums;
+}
+ 
+.td-fecha {
+  color: var(--color-text-light);
+  font-size: 0.82rem;
+  white-space: nowrap;
+}
+ 
+.db-nombre-link {
+  color: var(--color-primary);
+  font-weight: 600;
+  text-decoration: none;
+}
+ 
+.db-nombre-link:hover {
+  text-decoration: underline;
+}
+
+.db-thumb {
+  width: 36px;
+  height: 36px;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+  border: 1px solid rgba(0,0,0,0.08);
+}
+ 
+/* Badges de rol */
+ 
+.rol-badge {
+  display: inline-block;
+  padding: 0.18rem 0.55rem;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+ 
+.rol-admin  { background: #fde8d8; color: #b94a08; }
+.rol-mods   { background: #d8eafd; color: #085ab9; }
+.rol-user   { background: #e8fde8; color: #087a08; }
+
+@media (max-width: 600px) {
+  .perfil-banner-inner {
+    flex-direction: column;
+    text-align: center;
+  }
+  .perfil-banner .perfil-meta {
+    justify-content: center;
+  }
+}

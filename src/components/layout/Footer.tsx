@@ -1,0 +1,92 @@
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import logo from "../../assets/logo.png";
+import { useAuth } from "../../auth/AuthContext";
+import { enviarNewsletter } from "../../data/emailService";
+
+export default function Footer() {
+  const { user } = useAuth();
+  // Email introducido en el input del newsletter
+  const [email, setEmail] = useState("");
+  // Estado del proceso de suscripción
+  const [estado, setEstado] = useState<"idle" | "sending" | "ok" | "error">("idle");
+
+  async function handleNewsletter(e: React.SyntheticEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setEstado("sending");
+    try {
+      await enviarNewsletter({ email });
+      setEstado("ok");
+      setEmail("");
+      setTimeout(() => setEstado("idle"), 5000);
+    } catch {
+      setEstado("error");
+      setTimeout(() => setEstado("idle"), 4000);
+    }
+  }
+
+  return (
+    <footer className="footer">
+      <div className="footer-content">
+        <div className="footer-logo">
+          <img src={logo} alt="FanCollector Logo" />
+          <h3>FanCollector</h3>
+          <p>Colecciona, Conecta, Comparte</p>
+        </div>
+
+        <div className="footer-links">
+          <h4>Enlaces Rápidos</h4>
+          <ul>
+            <li><Link to="/">Inicio</Link></li>
+            <li><Link to="/colecciones">Colecciones</Link></li>
+            {!user
+              ? <li><Link to="/login">Iniciar Sesión</Link></li>
+              : <li><Link to={`/usuario/${user.id}/perfil`}>Mi perfil</Link></li>
+            }
+          </ul>
+        </div>
+
+        <div>
+          <h4>Síguenos</h4>
+          <div className="social-icons">
+            <a href="#" className="social-icon"><i className="fab fa-tiktok" /></a>
+            <a href="#" className="social-icon"><i className="fab fa-instagram" /></a>
+            <a href="#" className="social-icon"><i className="fab fa-twitter" /></a>
+            <a href="#" className="social-icon"><i className="fab fa-youtube" /></a>
+          </div>
+        </div>
+
+        <div className="footer-newsletter">
+          <h4>No te pierdas nada</h4>
+          {estado === "ok" && (
+            <p className="newsletter-msg newsletter-msg--ok">
+              <i className="fas fa-check-circle" /> ¡Suscrito! Revisa tu email.
+            </p>
+          )}
+          {estado === "error" && (
+            <p className="newsletter-msg newsletter-msg--error">
+              <i className="fas fa-times-circle" /> Error al suscribirse. Inténtalo de nuevo.
+            </p>
+          )}
+          <form onSubmit={handleNewsletter} className="newsletter-form">
+            <input
+              type="email"
+              placeholder="Tu email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              disabled={estado === "sending"}
+            />
+            <button type="submit" className="btn btn-sm" disabled={estado === "sending"}>
+              {estado === "sending" ? <i className="fas fa-spinner fa-spin" /> : "Suscribirse"}
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <div className="footer-bottom">
+        <p>&copy; 2025 FanCollector. Todos los derechos reservados.</p>
+      </div>
+    </footer>
+  );
+}

@@ -1,121 +1,115 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { Routes, Route } from "react-router-dom";
+import { useEffect } from "react";
+import toast from "react-hot-toast";
+import { AuthProvider } from "./auth/AuthContext";
+import { useAuth } from "./auth/AuthContext";
+import RequireAuth from "./auth/RequireAuth";
+import RequireRole from "./auth/RequireRole";
 
-function App() {
-  const [count, setCount] = useState(0)
+import Layout from "./components/layout/Layout";
+import HomePage from "./pages/HomePage";
+import NotFoundPage from "./pages/NotFoundPage";
+import Login from "./pages/Login";
 
-  return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+import Colecciones from "./pages/Coleccion/DirectorioColecciones";
+import ColeccionDetalle from "./pages/Coleccion/ColeccionDetalle";
 
-      <div className="ticks"></div>
+import MisColecciones from "./pages/Coleccion/UsuarioColecciones";
+import MisColeccionesDetalle from "./pages/Coleccion/UsuarioColeccionesDetalle";
+import ColeccionesDeUsuario from "./pages/Coleccion/UsuarioColecciones";
+import UsuarioColeccionesDetalleAjeno from "./pages/Coleccion/UsuarioColeccionesDetalleAjeno";
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+import ColeccionCrear from "./pages/Coleccion/ColeccionCrear";
+import ColeccionEditar from "./pages/Coleccion/ColeccionEditar";
+import ItemCrear from "./pages/Coleccion/ItemCrear";
+import ItemEditar from "./pages/Coleccion/ItemEditar";
+import MisItemsEditar from "./pages/Coleccion/MisItemsEditar";
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+import PerfilUsuario from "./pages/Perfil/Perfil";
+import PerfilEditar from "./pages/Perfil/PerfilEditar";
+import PerfilCambiarPassword from "./pages/Perfil/PerfilCambiarPassword";
+
+import AdminDashboard from "./pages/Perfil/AdminDashboard";
+import ModDashboard from "./pages/Perfil/ModDashboard";
+
+
+function SessionExpiryWatcher() {
+  const { token, logout } = useAuth();
+
+  useEffect(() => {
+    if (!token) return;
+    try {
+      const payload = JSON.parse(atob(token.split(".")[1])) as { exp: number };
+      const expMs = payload.exp * 1000; // exp viene en segundos, lo pasamos a ms
+      const avisarMs = expMs - Date.now() - 2 * 60 * 1000; // 2 min antes
+
+      if (avisarMs <= 0) return;
+
+      const avisoTimeout = setTimeout(() => {
+        toast("Tu sesión expirará en 2 minutos.", {
+          icon: <i className="fas fa-exclamation-triangle" />,
+          style: { background: "#fff3cd", color: "#856404", border: "1px solid #ffeeba" },
+        });
+      }, avisarMs);
+
+      const cierreTimeout = setTimeout(() => {
+        toast.error("Sesión expirada. Por favor inicia sesión de nuevo.");
+        logout();
+      }, expMs - Date.now());
+
+      return () => {
+        clearTimeout(avisoTimeout);
+        clearTimeout(cierreTimeout);
+      };
+    } catch {
+      // Si el token no es válido, ignore
+    }
+  }, [token, logout]);
+
+  return null;
 }
 
-export default App
+
+function AppRoutes() {
+  return (
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        {/* ── Rutas públicas ── */}
+        <Route index element={<HomePage />} />
+        <Route path="login" element={<Login />} />
+        <Route path="colecciones" element={<Colecciones />} />
+        <Route path="colecciones/:id" element={<ColeccionDetalle />} />
+        <Route path="*" element={<NotFoundPage />} />
+
+      {/* ── Rutas protegidas ── */}
+        <Route path="usuario/:userId/perfil" element={<RequireAuth><PerfilUsuario /></RequireAuth>} />
+        <Route path="usuario/:userId/perfil/editar" element={<RequireAuth><PerfilEditar /></RequireAuth>} />
+        <Route path="usuario/:userId/perfil/cambiar-password" element={<RequireAuth><PerfilCambiarPassword /></RequireAuth>} />
+
+        <Route path="mis-colecciones" element={<RequireAuth><MisColecciones /></RequireAuth>} />
+        <Route path="usuario/:userId/colecciones" element={<RequireAuth><ColeccionesDeUsuario /></RequireAuth>} />
+        <Route path="usuario/:userId/colecciones/:id" element={<RequireAuth><UsuarioColeccionesDetalleAjeno /></RequireAuth>} />
+        <Route path="mis-colecciones/:id" element={<RequireAuth><MisColeccionesDetalle /></RequireAuth>} />
+
+        <Route path="colecciones/crear" element={<RequireAuth><ColeccionCrear /></RequireAuth>} />
+        <Route path="colecciones/:id/editar" element={<RequireAuth><ColeccionEditar /></RequireAuth>} />
+        <Route path="colecciones/:coleccionId/items/crear" element={<RequireAuth><ItemCrear /></RequireAuth>} />
+        <Route path="colecciones/:coleccionId/items/:itemId/editar" element={<RequireAuth><ItemEditar /></RequireAuth>} />
+        <Route path="mis-colecciones/:id/items/editar" element={<RequireAuth><MisItemsEditar /></RequireAuth>} />
+
+        {/* ── Rutas protegidas por rol ── */}
+        <Route path="admin/dashboard" element={ <RequireAuth> <RequireRole allowedRoles={["ADMIN"]}> <AdminDashboard /> </RequireRole> </RequireAuth>} />
+        <Route path="admin/moderacion" element={ <RequireAuth> <RequireRole allowedRoles={["ADMIN", "MODS"]}> <ModDashboard /> </RequireRole> </RequireAuth>} />
+      </Route>
+    </Routes>
+  );
+}
+
+export default function App() {
+  return (
+    <AuthProvider>
+      <SessionExpiryWatcher />
+      <AppRoutes />
+    </AuthProvider>
+  );
+}
