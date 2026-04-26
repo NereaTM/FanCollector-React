@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: fancollector-react
-          image: a28731nerea/fancollector-react:v1
+          image: a28731nerea/fancollector-react:v2
           ports:
             - containerPort: 80
  
