@@ -64,4 +64,4 @@ jobs:
 
       - name: Desplegar frontend en EKS
         run: |
-          kubectl apply -f k8s/frontend-deployment.yaml
+          kubectl apply -f k8s/react-deployment.yaml
