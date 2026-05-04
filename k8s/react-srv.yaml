@@ -6,6 +6,7 @@ spec:
   type: LoadBalancer
   selector:
     app: fancollector
+    tier: react
   ports:
     - protocol: TCP
       port: 80
