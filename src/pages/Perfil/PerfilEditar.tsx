@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
-import { getUsuarioById, editarUsuario, eliminarUsuario } from "../../data/usuariosApi";
+import { getUsuarioById, editarUsuario, eliminarUsuario, cambiarRol } from "../../data/usuariosApi";
 import { getApiErrorMessage } from "../../data/apiClient";
 import { useAuth } from "../../auth/AuthContext";
 import { useImagenPreview } from "../../hooks/useImagenPreview";
@@ -75,6 +75,10 @@ export default function PerfilEditar() {
     setModalGuardar(false);
     try {
       await editarUsuario(targetId, formData);
+      // Si el admin cambió el rol, lo enviamos por su endpoint
+      if (fields.rol !== usuario?.rol) {
+        await cambiarRol(targetId, fields.rol);
+      }
       toast.success("Perfil actualizado correctamente");
       navigate(volverUrl);
     } catch (err) {
