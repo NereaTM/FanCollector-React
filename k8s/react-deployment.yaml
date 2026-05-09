@@ -20,7 +20,7 @@ spec:
       containers:
         - name: fancollector-react
           # CAMBIAR LA VERSIÓN EN FUNCION DE LA NECESIDAD!
-          image: a28731nerea/fancollector-react:v3
+          image: a28731nerea/fancollector-react:v4
           ports:
             - containerPort: 80
  
