@@ -45,10 +45,9 @@ jobs:
         with:
           context: .
           push: true
+          no-cache: true
           tags: ${{ steps.docker_meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
           platforms: linux/amd64
 
       - name: Configurar credenciales de AWS
